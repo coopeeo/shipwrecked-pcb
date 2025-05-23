@@ -32253,7 +32253,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistive_Touch:Resistive_Button_130mil"
 			(at 233.68 254 0)
 			(effects
 				(font
@@ -35169,7 +35169,7 @@
 			)
 		)
 		(property "Value" "Earth"
-			(at 104.648 115.824 0)
+			(at 100.33 118.618 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -35886,7 +35886,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistive_Touch:Resistive_Button_130mil"
 			(at 233.68 196.85 0)
 			(effects
 				(font
@@ -36155,7 +36155,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistive_Touch:Resistive_Button_130mil"
 			(at 233.68 208.28 0)
 			(effects
 				(font
@@ -37003,7 +37003,7 @@
 				)
 			)
 		)
-		(property "Footprint" "LED_SMD:LED_0603_1608Metric"
+		(property "Footprint" "Diode_SMD:D_0603_1608Metric"
 			(at 200.66 123.19 0)
 			(effects
 				(font
@@ -39637,7 +39637,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistive_Touch:Resistive_Button_130mil"
 			(at 233.68 242.57 0)
 			(effects
 				(font
@@ -40066,7 +40066,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistive_Touch:Resistive_Button_130mil"
 			(at 233.68 185.42 0)
 			(effects
 				(font
@@ -40544,7 +40544,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistive_Touch:Resistive_Button_130mil"
 			(at 233.68 231.14 0)
 			(effects
 				(font
@@ -41356,7 +41356,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistive_Touch:Resistive_Button_130mil"
 			(at 233.68 265.43 0)
 			(effects
 				(font
@@ -44222,7 +44222,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistive_Touch:Resistive_Button_130mil"
 			(at 233.68 219.71 0)
 			(effects
 				(font

@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "Resistive_Touch")(type "KiCad")(uri "${KIPRJMOD}/footprints/Resistive_Touch.pretty")(options "")(descr ""))
+)

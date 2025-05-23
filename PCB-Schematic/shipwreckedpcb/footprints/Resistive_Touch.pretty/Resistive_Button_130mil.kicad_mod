@@ -1,0 +1,188 @@
+(footprint "Resistive_Button_130mil"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0.108389 -4.510811 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "05719082-bd7d-470f-8322-0208515f3871")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Value" "Resistive_Button_130mil"
+		(at 0.108389 -6.010811 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "0cbe89cd-3042-4014-a659-3c75158964c4")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0.225106 -0.010811 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "ba0ca2c3-52dd-406e-b78c-9e83307f4f9b")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0.225106 -0.010811 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "7a66bb1b-d7a2-4d7c-941a-4b2f2e9c2e1c")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_text user "${REFERENCE}"
+		(at 0.225106 -4.510811 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "e5e92f46-0372-4f60-90f0-4732570b56cc")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" smd custom
+		(at -0.323313 4.342772 90)
+		(size 0.353373 0.353373)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(options
+			(clearance outline)
+			(anchor circle)
+		)
+		(primitives
+			(gr_poly
+				(pts
+					(xy -0.9525 -0.123681) (xy -0.948465 -0.143966) (xy -0.936975 -0.161162) (xy -0.919779 -0.172652)
+					(xy -0.899494 -0.176687) (xy 0.899494 -0.176687) (xy 0.919779 -0.172652) (xy 0.936975 -0.161162)
+					(xy 0.948465 -0.143966) (xy 0.9525 -0.123681) (xy 0.9525 0.123681) (xy 0.948465 0.143966) (xy 0.936975 0.161162)
+					(xy 0.919779 0.172652) (xy 0.899494 0.176687) (xy -0.899494 0.176687) (xy -0.919779 0.172652) (xy -0.936975 0.161162)
+					(xy -0.948465 0.143966) (xy -0.9525 0.123681)
+				)
+				(width 0)
+				(fill yes)
+			)
+			(gr_arc
+				(start 0.853583 0.048419)
+				(mid 4.353583 -3.451581)
+				(end 7.853583 0.048419)
+				(width 0.2)
+			)
+			(gr_line
+				(start 2.353223 2.431702)
+				(end 2.353958 -2.782307)
+				(width 0.2)
+			)
+			(gr_line
+				(start 4.353583 3.431702)
+				(end 4.353583 -3.451581)
+				(width 0.2)
+			)
+			(gr_line
+				(start 5.370021 2.931702)
+				(end 5.371705 -3.300227)
+				(width 0.2)
+			)
+			(gr_line
+				(start 6.327595 2.431702)
+				(end 6.329706 -2.840342)
+				(width 0.2)
+			)
+			(gr_line
+				(start 7.353583 0.931702)
+				(end 7.353943 -1.654451)
+				(width 0.2)
+			)
+			(gr_line
+				(start 3.353223 2.931702)
+				(end 3.353223 -3.279849)
+				(width 0.2)
+			)
+		)
+		(uuid "a345e700-e734-4e17-97d3-71fb15b26ed5")
+	)
+	(pad "2" smd custom
+		(at 0.332193 4.342772 90)
+		(size 0.335614 0.335614)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(options
+			(clearance outline)
+			(anchor circle)
+		)
+		(primitives
+			(gr_poly
+				(pts
+					(xy -0.9525 -0.117465) (xy -0.948668 -0.13673) (xy -0.937755 -0.153062) (xy -0.921423 -0.163975)
+					(xy -0.902158 -0.167807) (xy 0.902158 -0.167807) (xy 0.921423 -0.163975) (xy 0.937755 -0.153062)
+					(xy 0.948668 -0.13673) (xy 0.9525 -0.117465) (xy 0.9525 0.117465) (xy 0.948668 0.13673) (xy 0.937755 0.153062)
+					(xy 0.921423 0.163975) (xy 0.902158 0.167807) (xy -0.902158 0.167807) (xy -0.921423 0.163975) (xy -0.937755 0.153062)
+					(xy -0.948668 0.13673) (xy -0.9525 0.117465)
+				)
+				(width 0)
+				(fill yes)
+			)
+			(gr_arc
+				(start 7.853583 -0.057311)
+				(mid 4.353583 3.442689)
+				(end 0.853583 -0.057311)
+				(width 0.2)
+			)
+			(gr_line
+				(start 3.853583 -3.223804)
+				(end 3.853583 3.406418)
+				(width 0.2)
+			)
+			(gr_line
+				(start 4.853583 -3.223804)
+				(end 4.855267 3.406547)
+				(width 0.2)
+			)
+			(gr_line
+				(start 6.853583 -2.057311)
+				(end 6.854303 2.392913)
+				(width 0.2)
+			)
+			(gr_line
+				(start 1.853583 -2.057311)
+				(end 1.854303 2.392913)
+				(width 0.2)
+			)
+			(gr_line
+				(start 2.853583 -2.723804)
+				(end 2.853583 2.996069)
+				(width 0.2)
+			)
+			(gr_line
+				(start 5.853583 -2.723804)
+				(end 5.853583 3.049449)
+				(width 0.2)
+			)
+		)
+		(uuid "64187a73-7d6e-4fba-86e6-4338382eb1bb")
+	)
+	(embedded_fonts no)
+)
