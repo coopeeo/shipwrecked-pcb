@@ -187,7 +187,9 @@
       ],
       "track_widths": [
         0.0,
-        0.45
+        0.45,
+        0.5,
+        0.75
       ],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
@@ -500,7 +502,7 @@
       "idf": "",
       "netlist": "",
       "plot": "production/gerbers/",
-      "pos_files": "",
+      "pos_files": "production/",
       "specctra_dsn": "",
       "step": "",
       "svg": "",
