@@ -11598,16 +11598,6 @@
 	)
 	(wire
 		(pts
-			(xy 40.64 186.69) (xy 50.8 186.69)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "35c55cfe-d443-4df5-ad5b-4aa3cb47967f")
-	)
-	(wire
-		(pts
 			(xy 300.99 46.99) (xy 307.34 46.99)
 		)
 		(stroke
@@ -14335,6 +14325,16 @@
 			(type default)
 		)
 		(uuid "b96c4c79-f557-48e8-97c0-787e687ca6d0")
+	)
+	(wire
+		(pts
+			(xy 40.64 186.69) (xy 50.8 186.69)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b991a018-f555-485b-ab7e-929be03096e5")
 	)
 	(wire
 		(pts
@@ -31061,16 +31061,6 @@
 		)
 		(uuid "579de281-967c-4bfe-8388-db7b66890265")
 	)
-	(label "IO_INT"
-		(at 40.64 186.69 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "5a002d07-d7c6-429c-af36-ec8243674d51")
-	)
 	(label "XIN"
 		(at 325.12 107.95 180)
 		(effects
@@ -31290,6 +31280,16 @@
 			(justify right bottom)
 		)
 		(uuid "7dbe49a7-386a-4249-9a23-0bb2bca7f3b2")
+	)
+	(label "IO_INT"
+		(at 40.64 186.69 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "82b5f917-14ac-4eac-a159-37ee5c852865")
 	)
 	(label "DISP_RST"
 		(at 265.43 125.73 0)
