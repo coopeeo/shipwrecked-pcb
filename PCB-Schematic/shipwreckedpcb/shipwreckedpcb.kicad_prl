@@ -7,6 +7,7 @@
     "hidden_nets": [
       "Earth",
       "+1V1",
+      "+3V3",
       "+5V"
     ],
     "high_contrast_mode": 0,
@@ -36,6 +37,7 @@
       "vias",
       "footprint_text",
       "footprint_anchors",
+      "ratsnest",
       "grid",
       "footprints_front",
       "footprints_back",
