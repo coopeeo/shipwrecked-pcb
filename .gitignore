@@ -1,2 +1,5 @@
 PCB-Schematic/shipwreckedpcb/~shipwreckedpcb.kicad_sch.lck
 *.lck
+PCB-Schematic/shipwreckedpcb/shipwreckedpcb-backups
+PCB-Schematic/shipwreckedpcb/shipwreckedpcb-backups/*
+#auto_saved_files#

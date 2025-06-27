@@ -43160,7 +43160,6 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "b7c5d92a-01a4-4646-a779-19af50b801fd")
 		(property "Reference" "U8"
 			(at 102.4733 165.1 0)
