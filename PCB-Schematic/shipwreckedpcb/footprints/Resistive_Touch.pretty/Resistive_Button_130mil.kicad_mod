@@ -65,17 +65,6 @@
 		(layer "F.Mask")
 		(uuid "fd2ce656-d232-4989-9f88-a7a93ffb3820")
 	)
-	(fp_circle
-		(center 0 0)
-		(end 2.5 -3)
-		(stroke
-			(width 0.1)
-			(type solid)
-		)
-		(fill yes)
-		(layer "B.Mask")
-		(uuid "6f0dbcd5-3f55-4312-8b55-579ec3cd58e2")
-	)
 	(fp_text user "${REFERENCE}"
 		(at 0.225106 -4.510811 0)
 		(unlocked yes)
@@ -209,12 +198,7 @@
 	(zone
 		(net 0)
 		(net_name "")
-		(layers "F.Cu" "B.Cu" "In1.Cu" "In2.Cu" "In3.Cu" "In4.Cu" "In5.Cu" "In6.Cu"
-			"In7.Cu" "In8.Cu" "In9.Cu" "In10.Cu" "In11.Cu" "In12.Cu" "In13.Cu" "In14.Cu"
-			"In15.Cu" "In16.Cu" "In17.Cu" "In18.Cu" "In19.Cu" "In20.Cu" "In21.Cu"
-			"In22.Cu" "In23.Cu" "In24.Cu" "In25.Cu" "In26.Cu" "In27.Cu" "In28.Cu"
-			"In29.Cu" "In30.Cu"
-		)
+		(layer "F.Cu")
 		(uuid "9a575f33-aa54-4bf1-9484-8f35756edbfa")
 		(hatch edge 0.5)
 		(connect_pads
@@ -252,7 +236,7 @@
 				(xy -0.202311 4.11814) (xy 0.202311 4.11814) (xy 0.604985 4.07848) (xy 1.001833 3.999542) (xy 1.389033 3.882086)
 				(xy 1.762855 3.727244) (xy 2.1197 3.536506) (xy 2.456131 3.31171) (xy 2.768909 3.05502) (xy 3.05502 2.768909)
 				(xy 3.31171 2.456131) (xy 3.536506 2.1197) (xy 3.727244 1.762855) (xy 3.882086 1.389033) (xy 3.999542 1.001833)
-				(xy 4.07848 0.604985) (xy 4.11814 0.202311) (xy 4.11814 -0.202311)
+				(xy 4.07848 0.604985) (xy 4.11814 0.202311)
 			)
 		)
 	)
