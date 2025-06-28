@@ -1,0 +1,11 @@
+{
+    "displayName": "hello-world",
+    "logoPath": "logo.bmp",
+    "fullScreen": "false",
+    "suppressNotifs": "false",
+    "permissions": ["notifications:write", "rawHardware:write", "radio:write", "uart:write", "contacts:write"],
+    "radioSettings": {
+        "onPacketWhenNotActive": "ignore"
+    },
+    "appNumber": 1
+}
