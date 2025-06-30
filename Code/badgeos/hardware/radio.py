@@ -1,0 +1,3 @@
+class BadgeRadio:
+    # TODO
+    pass
