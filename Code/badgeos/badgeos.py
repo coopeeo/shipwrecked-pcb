@@ -2,11 +2,16 @@ import _thread
 import asyncio
 
 from badgeos.hardware.display import BadgeDisplay
+from badgeos.hardware.buttons import BadgeButtons
 from badgeos.hardware.radio import BadgeRadio
 
 from badgeos.contacts import ContactsManager
 from badgeos.notifs import NotifManager
 from badgeos.apps import AppManager
+
+# enable error reports for errors in ISRs
+import micropython
+micropython.alloc_emergency_exception_buf(100)
 
 class BadgeOS:
     """
@@ -27,10 +32,15 @@ class BadgeOS:
         # 4. Start the asyncio event loop.
 
         # Step 1:
-        # Things to initialize:
-        # - Hardware: Display, button hardware, radio hardware
-        # - IRQs: Button press, button release, radio receive
-        # - Software: Contacts manager, notification manager
+        # hardware
+        self.display = BadgeDisplay()
+        self.radio = BadgeRadio()
+        self.buttons = BadgeButtons()
+
+        # software
+        self.contacts = ContactsManager()
+        self.notifs = NotifManager()
+        self.apps = AppManager()
 
         # Step 2:
         _thread.start_new_thread(self.app_thread, ())
