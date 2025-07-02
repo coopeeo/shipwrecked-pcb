@@ -27,7 +27,7 @@ class BadgeOS:
         """
         # To do in this function:
         # 1. Initialize hardware, IRQs, state, etc.
-        # 2. Start the app thread.
+        # 2. ~~Start the app thread.~~
         # 3. Schedule the needed background tasks.
         # 4. Start the asyncio event loop.
 
@@ -42,15 +42,16 @@ class BadgeOS:
         self.notifs = NotifManager()
         self.apps = AppManager()
 
-        # Step 2:
-        _thread.start_new_thread(self.app_thread, ())
 
         # Step 3:
-        # background tasks to schedule:
-        # idk yet, maybe radio stuff?
+        asyncio.create_task(self.apps.scan_forever())
 
         # Step 4:
+        asyncio.run(self.run_async())
 
-    def app_thread(self):
-        # TODO
-        pass
+    async def run_async(self):
+        """
+        The main async loop for the badge. This runs on the main core.
+        """
+        while True:
+            await asyncio.sleep(1)
