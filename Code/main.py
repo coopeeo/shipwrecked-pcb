@@ -1,5 +1,5 @@
-from badgeos import badgeos
+from internal_os import internalos
 
-badge = badgeos.BadgeOS()
+badge = internalos.InternalOS()
 
 badge.start()

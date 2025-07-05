@@ -1,19 +1,19 @@
 import _thread
 import asyncio
 
-from badgeos.hardware.display import BadgeDisplay
-from badgeos.hardware.buttons import BadgeButtons
-from badgeos.hardware.radio import BadgeRadio
+from internal_os.hardware.display import BadgeDisplay
+from internal_os.hardware.buttons import BadgeButtons
+from internal_os.hardware.radio import BadgeRadio
 
-from badgeos.contacts import ContactsManager
-from badgeos.notifs import NotifManager
-from badgeos.apps import AppManager
+from internal_os.contacts import ContactsManager
+from internal_os.notifs import NotifManager
+from internal_os.apps import AppManager
 
 # enable error reports for errors in ISRs
 import micropython
 micropython.alloc_emergency_exception_buf(100)
 
-class BadgeOS:
+class InternalOS:
     """
     The class that manages the badge. It runs across two cores. The main core manages background tasks and runs with asyncio. The second core runs the app thread (synchronously).
     To start the badge, initialize the class, then call badge.start().

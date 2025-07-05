@@ -1,5 +1,5 @@
 from machine import Pin, SPI, Timer
-from badgeos.hardware.einkdriver import EPD
+from internal_os.hardware.einkdriver import EPD
 
 class BadgeDisplay:
     """
