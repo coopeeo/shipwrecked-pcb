@@ -80,6 +80,9 @@ def app_thread(app_repr: AppRepr, manager: 'AppManager') -> None:
         if not hasattr(applib, 'App'):
             raise ImportError(f"App {app_repr.display_name} does not define an 'App' class.")
         app_class = applib.App
+        if not issubclass(app_class, applib.BaseApp):
+            raise TypeError(f"App {app_repr.display_name} does not inherit from BaseApp.")
+        app = app_class()
         # TODO: build out the app API, then actually run the app here
 
     except Exception as e:

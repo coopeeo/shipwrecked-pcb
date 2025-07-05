@@ -1,6 +1,8 @@
 import _thread
 import asyncio
 
+from machine import RTC, Pin, PWM
+
 from internal_os.hardware.display import BadgeDisplay
 from internal_os.hardware.buttons import BadgeButtons
 from internal_os.hardware.radio import BadgeRadio
@@ -17,9 +19,18 @@ class InternalOS:
     """
     The class that manages the badge. It runs across two cores. The main core manages background tasks and runs with asyncio. The second core runs the app thread (synchronously).
     To start the badge, initialize the class, then call badge.start().
+    To allow access from various contexts, this class is a singleton.
     """
-    def __init__(self):
-        pass
+    
+    @classmethod
+    def instance(cls):
+        """
+        Returns the singleton instance of InternalOS.
+        If it doesn't exist, creates a new one.
+        """
+        if not hasattr(cls, '_instance'):
+            cls._instance = cls()
+        return cls._instance
     
     def start(self):
         """
@@ -36,6 +47,9 @@ class InternalOS:
         self.display = BadgeDisplay()
         self.radio = BadgeRadio()
         self.buttons = BadgeButtons()
+        self.rtc = RTC()
+        self.buzzer = PWM(Pin(28, Pin.OUT))
+        self.led = PWM(Pin(16, Pin.OUT))
 
         # software
         self.contacts = ContactsManager()
