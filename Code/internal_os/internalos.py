@@ -1,7 +1,7 @@
 import _thread
 import asyncio
 
-from machine import RTC, Pin, PWM
+from machine import RTC, Pin, PWM, unique_id
 
 from internal_os.hardware.display import BadgeDisplay
 from internal_os.hardware.buttons import BadgeButtons
@@ -69,3 +69,11 @@ class InternalOS:
         """
         while True:
             await asyncio.sleep(1)
+
+        
+    def get_badge_id(self) -> str:
+        """
+        Returns the badge ID as a hex string.
+        The badge ID is the last 2 bytes (4 digits) of the machine.unique_id().
+        """
+        return unique_id().hex()[-4:]

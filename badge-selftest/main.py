@@ -6,7 +6,7 @@
 # - LED
 # - radio
 
-from machine import Pin, SPI, I2C, PWM
+from machine import Pin, SPI, I2C, PWM, unique_id
 import utime
 
 print("--- Starting self-test---")
@@ -35,6 +35,7 @@ print("Displaying base image...")
 display.fill(1)  # Fill with white
 display.text("Shipwrecked Badge Self-test", 10, 10, 0)
 display.text("Press any button on the badge", 10, 30, 0)
+display.text(f"Badge ID: {unique_id().hex()[-4:]}", 10, 50, 0) 
 display.display()
 display.sleep()
 
@@ -64,7 +65,7 @@ while button_pressed is None:
             break
     utime.sleep(0.1)  # Polling delay
 
-display.text(f"Button {button_pressed} pressed!", 10, 50, 0)
+display.text(f"Button {button_pressed} pressed!", 10, 70, 0)
 display.display()
 display.sleep()
 
