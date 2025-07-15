@@ -9289,22 +9289,10 @@
 		(uuid "14d0cc32-69b1-4e22-a8d0-491c2b8dad7f")
 	)
 	(junction
-		(at 241.3 247.65)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "1e1ccc65-1d27-42fd-adb7-f6449c13e236")
-	)
-	(junction
 		(at 198.12 109.22)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "1ece6680-a645-4559-bc45-f0a64bac38e9")
-	)
-	(junction
-		(at 241.3 201.93)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "1f45a081-741f-4631-8ebe-ee65bbb36785")
 	)
 	(junction
 		(at 95.25 109.22)
@@ -9413,12 +9401,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "4b9cd60b-236a-4972-bb8e-e832329c087b")
-	)
-	(junction
-		(at 241.3 259.08)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "4ba6c60f-c31b-4bfc-bcb6-d39c6d1795af")
 	)
 	(junction
 		(at 260.35 236.22)
@@ -9601,12 +9583,6 @@
 		(uuid "7852cf88-f9ea-4519-a6f5-9e58fca812e7")
 	)
 	(junction
-		(at 241.3 236.22)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "78905d28-0c9a-4081-b13d-7b8c0bb1b7c6")
-	)
-	(junction
 		(at 260.35 201.93)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -9751,12 +9727,6 @@
 		(uuid "b4618e2d-dec7-4fad-9c68-785df98c6af1")
 	)
 	(junction
-		(at 241.3 190.5)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "b6490def-54f0-4ad1-befd-3adb44af6250")
-	)
-	(junction
 		(at 101.6 57.15)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -9797,12 +9767,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "c58af4d7-88ef-4fe7-9859-b38c254afc25")
-	)
-	(junction
-		(at 241.3 213.36)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "c6cbc233-1cfe-4c74-a0f9-046d95bb9210")
 	)
 	(junction
 		(at 222.25 125.73)
@@ -9901,12 +9865,6 @@
 		(uuid "f4daf482-fcf7-457a-b465-406531a64a49")
 	)
 	(junction
-		(at 241.3 224.79)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "f5545821-5c1a-4861-b654-cc9ed546af3b")
-	)
-	(junction
 		(at 44.45 106.68)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -9923,12 +9881,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "f7d5b627-792e-4719-bd17-da7fa78749f1")
-	)
-	(junction
-		(at 241.3 270.51)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "fc549c22-ff63-4997-bd3c-8fa2a613a44b")
 	)
 	(junction
 		(at 309.88 107.95)
@@ -9991,16 +9943,6 @@
 			(type default)
 		)
 		(uuid "01aa20dc-f647-4fed-858a-3c6827f369f6")
-	)
-	(wire
-		(pts
-			(xy 241.3 270.51) (xy 238.76 270.51)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "02310545-0e74-46b3-81b4-221526f7fdcc")
 	)
 	(wire
 		(pts
@@ -10354,7 +10296,7 @@
 	)
 	(wire
 		(pts
-			(xy 241.3 224.79) (xy 238.76 224.79)
+			(xy 238.76 224.79) (xy 248.92 224.79)
 		)
 		(stroke
 			(width 0)
@@ -10471,16 +10413,6 @@
 			(type default)
 		)
 		(uuid "1efb17cb-56b6-4788-9e2b-90fa7cb72104")
-	)
-	(wire
-		(pts
-			(xy 242.57 228.6) (xy 241.3 228.6)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1f30bdfa-9822-43e7-82f0-5ce3fe1a1995")
 	)
 	(wire
 		(pts
@@ -10644,7 +10576,7 @@
 	)
 	(wire
 		(pts
-			(xy 255.27 270.51) (xy 241.3 270.51)
+			(xy 238.76 270.51) (xy 248.92 270.51)
 		)
 		(stroke
 			(width 0)
@@ -10854,16 +10786,6 @@
 	)
 	(wire
 		(pts
-			(xy 255.27 201.93) (xy 241.3 201.93)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "31d2eb7e-cf1c-407b-bec3-a26165e38475")
-	)
-	(wire
-		(pts
 			(xy 378.46 210.82) (xy 401.32 210.82)
 		)
 		(stroke
@@ -11054,7 +10976,7 @@
 	)
 	(wire
 		(pts
-			(xy 255.27 213.36) (xy 241.3 213.36)
+			(xy 238.76 213.36) (xy 248.92 213.36)
 		)
 		(stroke
 			(width 0)
@@ -11374,7 +11296,7 @@
 	)
 	(wire
 		(pts
-			(xy 241.3 190.5) (xy 238.76 190.5)
+			(xy 238.76 190.5) (xy 248.92 190.5)
 		)
 		(stroke
 			(width 0)
@@ -11514,7 +11436,7 @@
 	)
 	(wire
 		(pts
-			(xy 238.76 201.93) (xy 241.3 201.93)
+			(xy 238.76 201.93) (xy 248.92 201.93)
 		)
 		(stroke
 			(width 0)
@@ -12124,16 +12046,6 @@
 	)
 	(wire
 		(pts
-			(xy 242.57 194.31) (xy 241.3 194.31)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "74bba697-3c13-463c-80c3-f53d43555416")
-	)
-	(wire
-		(pts
 			(xy 36.83 68.58) (xy 36.83 58.42)
 		)
 		(stroke
@@ -12244,7 +12156,7 @@
 	)
 	(wire
 		(pts
-			(xy 255.27 236.22) (xy 241.3 236.22)
+			(xy 238.76 236.22) (xy 248.92 236.22)
 		)
 		(stroke
 			(width 0)
@@ -12344,16 +12256,6 @@
 	)
 	(wire
 		(pts
-			(xy 242.57 251.46) (xy 241.3 251.46)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7fdc4683-8938-4ded-8d05-b8edafebb9f4")
-	)
-	(wire
-		(pts
 			(xy 265.43 137.16) (xy 279.4 137.16)
 		)
 		(stroke
@@ -12411,16 +12313,6 @@
 			(type default)
 		)
 		(uuid "82748890-b79e-4aec-af7a-4a156868e62d")
-	)
-	(wire
-		(pts
-			(xy 255.27 224.79) (xy 241.3 224.79)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "830c9629-2561-48c9-a564-ccb4bff08df3")
 	)
 	(wire
 		(pts
@@ -12614,26 +12506,6 @@
 	)
 	(wire
 		(pts
-			(xy 241.3 247.65) (xy 238.76 247.65)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8fdb7f90-1ec7-41bc-937c-a9308862079f")
-	)
-	(wire
-		(pts
-			(xy 242.57 182.88) (xy 241.3 182.88)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9024d8ea-ecad-4c20-a7e1-53f081d134c8")
-	)
-	(wire
-		(pts
 			(xy 224.79 190.5) (xy 228.6 190.5)
 		)
 		(stroke
@@ -12704,17 +12576,7 @@
 	)
 	(wire
 		(pts
-			(xy 242.57 262.89) (xy 241.3 262.89)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "95a0c8d5-0dfc-406c-bf6b-9c94b3dd8a4b")
-	)
-	(wire
-		(pts
-			(xy 255.27 247.65) (xy 241.3 247.65)
+			(xy 238.76 247.65) (xy 248.92 247.65)
 		)
 		(stroke
 			(width 0)
@@ -12824,16 +12686,6 @@
 	)
 	(wire
 		(pts
-			(xy 242.57 240.03) (xy 241.3 240.03)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9fc56cc7-1ff4-4b6b-b61a-40defe3fdd92")
-	)
-	(wire
-		(pts
 			(xy 401.32 170.18) (xy 378.46 170.18)
 		)
 		(stroke
@@ -12934,16 +12786,6 @@
 	)
 	(wire
 		(pts
-			(xy 255.27 190.5) (xy 241.3 190.5)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a7191824-8432-4310-b5da-b19926a49517")
-	)
-	(wire
-		(pts
 			(xy 283.21 213.36) (xy 274.32 213.36)
 		)
 		(stroke
@@ -12951,16 +12793,6 @@
 			(type default)
 		)
 		(uuid "a79793dc-f8f5-4295-a359-63be4363dc32")
-	)
-	(wire
-		(pts
-			(xy 241.3 236.22) (xy 238.76 236.22)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a875eaf0-1aca-4566-a436-6db908d76557")
 	)
 	(wire
 		(pts
@@ -13001,16 +12833,6 @@
 			(type default)
 		)
 		(uuid "a9b7809d-63d6-468e-9371-9ce6d7fc834c")
-	)
-	(wire
-		(pts
-			(xy 241.3 213.36) (xy 238.76 213.36)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "aa64d598-2c80-475b-9c31-02b555fcb5f8")
 	)
 	(wire
 		(pts
@@ -13264,16 +13086,6 @@
 	)
 	(wire
 		(pts
-			(xy 241.3 259.08) (xy 238.76 259.08)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "bb639d13-371a-4852-86e9-bb01ae02171b")
-	)
-	(wire
-		(pts
 			(xy 123.19 125.73) (xy 123.19 119.38)
 		)
 		(stroke
@@ -13434,7 +13246,7 @@
 	)
 	(wire
 		(pts
-			(xy 255.27 259.08) (xy 241.3 259.08)
+			(xy 238.76 259.08) (xy 248.92 259.08)
 		)
 		(stroke
 			(width 0)
@@ -13844,16 +13656,6 @@
 	)
 	(wire
 		(pts
-			(xy 242.57 205.74) (xy 241.3 205.74)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "dc421142-ce77-40ac-9002-1b5049368df8")
-	)
-	(wire
-		(pts
 			(xy 228.6 153.67) (xy 228.6 139.7)
 		)
 		(stroke
@@ -14231,16 +14033,6 @@
 			(type default)
 		)
 		(uuid "f96fd926-58e3-4aed-a35f-bfb6c67cef30")
-	)
-	(wire
-		(pts
-			(xy 242.57 217.17) (xy 241.3 217.17)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "faabe329-cbcb-4e19-85a2-75c225d5cae0")
 	)
 	(wire
 		(pts
@@ -29708,7 +29500,7 @@
 		(uuid "47dcebf9-8111-47fe-80d4-45985d11c6fa")
 	)
 	(label "BUTT_7"
-		(at 255.27 259.08 180)
+		(at 248.92 259.08 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -29768,7 +29560,7 @@
 		(uuid "5345f832-d4bd-4ec2-81a6-5e4f96faa6bb")
 	)
 	(label "BUTT_5"
-		(at 255.27 236.22 180)
+		(at 248.92 236.22 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -29948,7 +29740,7 @@
 		(uuid "6dfe4853-4b0f-45aa-b102-5bfacc879da0")
 	)
 	(label "BUTT_4"
-		(at 255.27 224.79 180)
+		(at 248.92 224.79 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -30018,7 +29810,7 @@
 		(uuid "77b98ec7-6388-48a5-8d99-bc0a8cfcdbb7")
 	)
 	(label "BUTT_8"
-		(at 255.27 270.51 180)
+		(at 248.92 270.51 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -30048,7 +29840,7 @@
 		(uuid "79ca809b-0e85-4d4a-bb3d-19c8cc75a720")
 	)
 	(label "BUTT_2"
-		(at 255.27 201.93 180)
+		(at 248.92 201.93 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -30428,7 +30220,7 @@
 		(uuid "af388d5f-faa0-43a1-a5f9-94071e74cfb5")
 	)
 	(label "BUTT_3"
-		(at 255.27 213.36 180)
+		(at 248.92 213.36 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -30748,7 +30540,7 @@
 		(uuid "d7317ed7-bf94-4f1a-8d8d-459a0585d00f")
 	)
 	(label "BUTT_6"
-		(at 255.27 247.65 180)
+		(at 248.92 247.65 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -30908,7 +30700,7 @@
 		(uuid "f3d69f8e-2c77-4b2d-aa55-923b52de2ed1")
 	)
 	(label "BUTT_1"
-		(at 255.27 190.5 180)
+		(at 248.92 190.5 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -31129,9 +30921,9 @@
 		(at 233.68 259.08 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom no)
+		(in_bom yes)
 		(on_board yes)
-		(dnp yes)
+		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "0248d935-6b9d-451c-8b80-d132aa6e0a98")
 		(property "Reference" "SW9"
@@ -31142,7 +30934,7 @@
 				)
 			)
 		)
-		(property "Value" "Resistive"
+		(property "Value" "Clicky - THT"
 			(at 233.68 254 0)
 			(effects
 				(font
@@ -31150,7 +30942,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistive_Touch:Resistive_Button_130mil"
+		(property "Footprint" "Button_Switch_THT:SW_PUSH_6mm"
 			(at 233.68 254 0)
 			(effects
 				(font
@@ -31443,7 +31235,7 @@
 				)
 			)
 		)
-		(property "Value" "Clicky - SMD"
+		(property "Value" "Clicky - THT"
 			(at 269.24 196.85 0)
 			(effects
 				(font
@@ -31451,7 +31243,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Button_Switch_SMD:SW_Tactile_SPST_NO_Straight_CK_PTS636Sx25SMTRLFS"
+		(property "Footprint" "Button_Switch_THT:SW_PUSH_6mm"
 			(at 269.24 196.85 0)
 			(effects
 				(font
@@ -32918,85 +32710,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R_US")
-		(at 241.3 232.41 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(dnp yes)
-		(fields_autoplaced yes)
-		(uuid "158b3308-3ca7-4070-a0ed-997f38d5ec29")
-		(property "Reference" "R14"
-			(at 243.84 231.1399 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "DNF"
-			(at 243.84 233.6799 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 242.316 232.664 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 241.3 232.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor, US symbol"
-			(at 241.3 232.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part" ""
-			(at 241.3 232.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "dc1b4a29-9b2e-45e0-bffa-5209b43951b3")
-		)
-		(pin "2"
-			(uuid "ca89694b-5685-4190-829b-eea7d421e5ae")
-		)
-		(instances
-			(project "shipwreckedpcb"
-				(path "/32cea5fd-2227-40ea-910d-55a625f2ade5"
-					(reference "R14")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Connector_Generic:Conn_01x01")
 		(at 83.82 57.15 180)
 		(unit 1)
@@ -33498,71 +33211,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:+3V3")
-		(at 242.57 194.31 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "210a10c3-4d01-444e-9bb5-05b4dc877604")
-		(property "Reference" "#PWR026"
-			(at 242.57 198.12 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 246.126 193.294 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 242.57 194.31 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 242.57 194.31 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 242.57 194.31 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "8c16a73f-7abb-4316-8abd-a189076c016c")
-		)
-		(instances
-			(project "shipwreckedpcb"
-				(path "/32cea5fd-2227-40ea-910d-55a625f2ade5"
-					(reference "#PWR026")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:D")
 		(at 241.3 114.3 0)
 		(unit 1)
@@ -34013,71 +33661,6 @@
 			(project "shipwreckedpcb"
 				(path "/32cea5fd-2227-40ea-910d-55a625f2ade5"
 					(reference "#PWR019")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 242.57 251.46 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "2c78ab6a-56d5-47cd-a0e8-6f3ada371b2d")
-		(property "Reference" "#PWR031"
-			(at 242.57 255.27 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 246.38 250.444 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 242.57 251.46 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 242.57 251.46 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 242.57 251.46 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "391637b1-3b86-4b08-b990-ac60b61cfd3d")
-		)
-		(instances
-			(project "shipwreckedpcb"
-				(path "/32cea5fd-2227-40ea-910d-55a625f2ade5"
-					(reference "#PWR031")
 					(unit 1)
 				)
 			)
@@ -35212,9 +34795,9 @@
 		(at 233.68 201.93 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom no)
+		(in_bom yes)
 		(on_board yes)
-		(dnp yes)
+		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "35f6f27e-3517-4551-9c2f-e557deaa05de")
 		(property "Reference" "SW4"
@@ -35225,7 +34808,7 @@
 				)
 			)
 		)
-		(property "Value" "Resistive"
+		(property "Value" "Clicky - THT"
 			(at 233.68 196.85 0)
 			(effects
 				(font
@@ -35233,7 +34816,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistive_Touch:Resistive_Button_130mil"
+		(property "Footprint" "Button_Switch_THT:SW_PUSH_6mm"
 			(at 233.68 196.85 0)
 			(effects
 				(font
@@ -35379,7 +34962,7 @@
 				)
 			)
 		)
-		(property "Value" "Clicky - SMD"
+		(property "Value" "Clicky - THT"
 			(at 269.24 219.71 0)
 			(effects
 				(font
@@ -35387,7 +34970,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Button_Switch_SMD:SW_Tactile_SPST_NO_Straight_CK_PTS636Sx25SMTRLFS"
+		(property "Footprint" "Button_Switch_THT:SW_PUSH_6mm"
 			(at 269.24 219.71 0)
 			(effects
 				(font
@@ -35443,9 +35026,9 @@
 		(at 233.68 213.36 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom no)
+		(in_bom yes)
 		(on_board yes)
-		(dnp yes)
+		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "376fbaee-b223-439d-bca5-feca55f77ce6")
 		(property "Reference" "SW5"
@@ -35456,7 +35039,7 @@
 				)
 			)
 		)
-		(property "Value" "Resistive"
+		(property "Value" "Clicky - THT"
 			(at 233.68 208.28 0)
 			(effects
 				(font
@@ -35464,7 +35047,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistive_Touch:Resistive_Button_130mil"
+		(property "Footprint" "Button_Switch_THT:SW_PUSH_6mm"
 			(at 233.68 208.28 0)
 			(effects
 				(font
@@ -35993,71 +35576,6 @@
 			(project "shipwreckedpcb"
 				(path "/32cea5fd-2227-40ea-910d-55a625f2ade5"
 					(reference "C19")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 242.57 240.03 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "3eaf4f98-ac0c-4743-ae25-6f2b7939e95a")
-		(property "Reference" "#PWR030"
-			(at 242.57 243.84 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 246.126 239.014 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 242.57 240.03 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 242.57 240.03 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 242.57 240.03 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "87eac748-cc5e-4814-9d7f-25f46490868d")
-		)
-		(instances
-			(project "shipwreckedpcb"
-				(path "/32cea5fd-2227-40ea-910d-55a625f2ade5"
-					(reference "#PWR030")
 					(unit 1)
 				)
 			)
@@ -37421,85 +36939,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R_US")
-		(at 241.3 255.27 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(dnp yes)
-		(fields_autoplaced yes)
-		(uuid "50be65df-172c-42bf-8aae-e80cc404d121")
-		(property "Reference" "R16"
-			(at 243.84 253.9999 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "DNF"
-			(at 243.84 256.5399 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 242.316 255.524 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 241.3 255.27 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor, US symbol"
-			(at 241.3 255.27 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part" ""
-			(at 241.3 255.27 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "ab4298ee-caa9-49d2-9ee3-e6f560a04f28")
-		)
-		(pin "2"
-			(uuid "2eeeea0d-db41-4099-868f-5ce4919ba4a0")
-		)
-		(instances
-			(project "shipwreckedpcb"
-				(path "/32cea5fd-2227-40ea-910d-55a625f2ade5"
-					(reference "R16")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Switch:SW_SPDT")
 		(at 264.16 45.72 0)
 		(unit 1)
@@ -38239,85 +37678,6 @@
 	)
 	(symbol
 		(lib_id "Device:R_US")
-		(at 241.3 266.7 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(dnp yes)
-		(fields_autoplaced yes)
-		(uuid "5d09e99c-a73c-4a2c-91f5-ad0c83941c99")
-		(property "Reference" "R17"
-			(at 243.84 265.4299 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "DNF"
-			(at 243.84 267.9699 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 242.316 266.954 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 241.3 266.7 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor, US symbol"
-			(at 241.3 266.7 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part" ""
-			(at 241.3 266.7 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "0d545b1f-0786-4367-9f75-3529e2e69256")
-		)
-		(pin "2"
-			(uuid "bbaa0629-50da-46e4-815b-922679ca2518")
-		)
-		(instances
-			(project "shipwreckedpcb"
-				(path "/32cea5fd-2227-40ea-910d-55a625f2ade5"
-					(reference "R17")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R_US")
 		(at 322.58 144.78 90)
 		(unit 1)
 		(exclude_from_sim no)
@@ -38613,85 +37973,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R_US")
-		(at 241.3 243.84 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(dnp yes)
-		(fields_autoplaced yes)
-		(uuid "63a3b4e3-ad84-4683-bc10-de86d3b8587c")
-		(property "Reference" "R15"
-			(at 243.84 242.5699 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "DNF"
-			(at 243.84 245.1099 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 242.316 244.094 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 241.3 243.84 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor, US symbol"
-			(at 241.3 243.84 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part" ""
-			(at 241.3 243.84 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "87a49433-bc15-4e2e-9816-a2283eb77c54")
-		)
-		(pin "2"
-			(uuid "ce94132c-7e41-41c8-9d43-2cca804201a1")
-		)
-		(instances
-			(project "shipwreckedpcb"
-				(path "/32cea5fd-2227-40ea-910d-55a625f2ade5"
-					(reference "R15")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Switch:SW_Push")
 		(at 269.24 247.65 0)
 		(unit 1)
@@ -38709,7 +37990,7 @@
 				)
 			)
 		)
-		(property "Value" "Clicky - SMD"
+		(property "Value" "Clicky - THT"
 			(at 269.24 242.57 0)
 			(effects
 				(font
@@ -38717,7 +37998,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Button_Switch_SMD:SW_Tactile_SPST_NO_Straight_CK_PTS636Sx25SMTRLFS"
+		(property "Footprint" "Button_Switch_THT:SW_PUSH_6mm"
 			(at 269.24 242.57 0)
 			(effects
 				(font
@@ -38773,9 +38054,9 @@
 		(at 233.68 247.65 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom no)
+		(in_bom yes)
 		(on_board yes)
-		(dnp yes)
+		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "6577e60e-1f96-4518-9e27-821a09e4c76d")
 		(property "Reference" "SW8"
@@ -38786,7 +38067,7 @@
 				)
 			)
 		)
-		(property "Value" "Resistive"
+		(property "Value" "Clicky - THT"
 			(at 233.68 242.57 0)
 			(effects
 				(font
@@ -38794,7 +38075,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistive_Touch:Resistive_Button_130mil"
+		(property "Footprint" "Button_Switch_THT:SW_PUSH_6mm"
 			(at 233.68 242.57 0)
 			(effects
 				(font
@@ -38929,7 +38210,7 @@
 				)
 			)
 		)
-		(property "Value" "Clicky - SMD"
+		(property "Value" "Clicky - THT"
 			(at 269.24 265.43 0)
 			(effects
 				(font
@@ -38937,7 +38218,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Button_Switch_SMD:SW_Tactile_SPST_NO_Straight_CK_PTS636Sx25SMTRLFS"
+		(property "Footprint" "Button_Switch_THT:SW_PUSH_6mm"
 			(at 269.24 265.43 0)
 			(effects
 				(font
@@ -39224,9 +38505,9 @@
 		(at 233.68 190.5 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom no)
+		(in_bom yes)
 		(on_board yes)
-		(dnp yes)
+		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "6ae9e0ef-7efc-46cf-8985-e20fca188525")
 		(property "Reference" "SW3"
@@ -39237,7 +38518,7 @@
 				)
 			)
 		)
-		(property "Value" "Resistive"
+		(property "Value" "Clicky - THT"
 			(at 233.68 185.42 0)
 			(effects
 				(font
@@ -39245,7 +38526,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistive_Touch:Resistive_Button_130mil"
+		(property "Footprint" "Button_Switch_THT:SW_PUSH_6mm"
 			(at 233.68 185.42 0)
 			(effects
 				(font
@@ -39291,71 +38572,6 @@
 			(project ""
 				(path "/32cea5fd-2227-40ea-910d-55a625f2ade5"
 					(reference "SW3")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 242.57 262.89 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "6b013bdc-0436-462a-a40e-8ac2aefa91bd")
-		(property "Reference" "#PWR032"
-			(at 242.57 266.7 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 246.126 261.874 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 242.57 262.89 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 242.57 262.89 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 242.57 262.89 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "bb44a8ec-113f-4d77-b620-7557f90936ec")
-		)
-		(instances
-			(project "shipwreckedpcb"
-				(path "/32cea5fd-2227-40ea-910d-55a625f2ade5"
-					(reference "#PWR032")
 					(unit 1)
 				)
 			)
@@ -39645,92 +38861,13 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R_US")
-		(at 241.3 220.98 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(dnp yes)
-		(fields_autoplaced yes)
-		(uuid "6eabb770-1176-4a2f-ba2f-3e6d824a06b0")
-		(property "Reference" "R13"
-			(at 243.84 219.7099 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "DNF"
-			(at 243.84 222.2499 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 242.316 221.234 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 241.3 220.98 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor, US symbol"
-			(at 241.3 220.98 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part" ""
-			(at 241.3 220.98 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "04219eb2-c631-4424-a2af-79c9cd4c3c1f")
-		)
-		(pin "2"
-			(uuid "e474b669-abb7-4294-96d6-bc226c0493f0")
-		)
-		(instances
-			(project "shipwreckedpcb"
-				(path "/32cea5fd-2227-40ea-910d-55a625f2ade5"
-					(reference "R13")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Switch:SW_Push")
 		(at 233.68 236.22 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom no)
+		(in_bom yes)
 		(on_board yes)
-		(dnp yes)
+		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "6ee66e8e-fb6f-4887-aeda-e794da4dea22")
 		(property "Reference" "SW7"
@@ -39741,7 +38878,7 @@
 				)
 			)
 		)
-		(property "Value" "Resistive"
+		(property "Value" "Clicky - THT"
 			(at 233.68 231.14 0)
 			(effects
 				(font
@@ -39749,7 +38886,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistive_Touch:Resistive_Button_130mil"
+		(property "Footprint" "Button_Switch_THT:SW_PUSH_6mm"
 			(at 233.68 231.14 0)
 			(effects
 				(font
@@ -39795,71 +38932,6 @@
 			(project "shipwreckedpcb"
 				(path "/32cea5fd-2227-40ea-910d-55a625f2ade5"
 					(reference "SW7")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 242.57 182.88 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "6f0a18f9-7109-4eac-874a-4a40128d7f0c")
-		(property "Reference" "#PWR025"
-			(at 242.57 186.69 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 246.38 181.864 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 242.57 182.88 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 242.57 182.88 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 242.57 182.88 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "94864817-ff28-44c1-85f7-c1316417ff10")
-		)
-		(instances
-			(project "shipwreckedpcb"
-				(path "/32cea5fd-2227-40ea-910d-55a625f2ade5"
-					(reference "#PWR025")
 					(unit 1)
 				)
 			)
@@ -40501,9 +39573,9 @@
 		(at 233.68 270.51 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom no)
+		(in_bom yes)
 		(on_board yes)
-		(dnp yes)
+		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "7b9d6cf7-7038-4531-bad8-e6574f1b838a")
 		(property "Reference" "SW10"
@@ -40514,7 +39586,7 @@
 				)
 			)
 		)
-		(property "Value" "Resistive"
+		(property "Value" "Clicky - THT"
 			(at 233.68 265.43 0)
 			(effects
 				(font
@@ -40522,7 +39594,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistive_Touch:Resistive_Button_130mil"
+		(property "Footprint" "Button_Switch_THT:SW_PUSH_6mm"
 			(at 233.68 265.43 0)
 			(effects
 				(font
@@ -42073,85 +41145,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R_US")
-		(at 241.3 209.55 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(dnp yes)
-		(fields_autoplaced yes)
-		(uuid "965d37aa-6ff3-453f-8065-0b002b0a63e0")
-		(property "Reference" "R12"
-			(at 243.84 208.2799 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "DNF"
-			(at 243.84 210.8199 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 242.316 209.804 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 241.3 209.55 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor, US symbol"
-			(at 241.3 209.55 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part" ""
-			(at 241.3 209.55 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "76b111b5-e729-4eb5-a341-833e18cf12a2")
-		)
-		(pin "2"
-			(uuid "7e87a527-bcfe-42b3-9e76-520525d6ac4d")
-		)
-		(instances
-			(project "shipwreckedpcb"
-				(path "/32cea5fd-2227-40ea-910d-55a625f2ade5"
-					(reference "R12")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GNDPWR")
 		(at 299.72 76.2 0)
 		(unit 1)
@@ -43316,9 +42309,9 @@
 		(at 233.68 224.79 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom no)
+		(in_bom yes)
 		(on_board yes)
-		(dnp yes)
+		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "a9eb341b-f889-4996-bf21-d25756795e2a")
 		(property "Reference" "SW6"
@@ -43329,7 +42322,7 @@
 				)
 			)
 		)
-		(property "Value" "Resistive"
+		(property "Value" "Clicky - THT"
 			(at 233.68 219.71 0)
 			(effects
 				(font
@@ -43337,7 +42330,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistive_Touch:Resistive_Button_130mil"
+		(property "Footprint" "Button_Switch_THT:SW_PUSH_6mm"
 			(at 233.68 219.71 0)
 			(effects
 				(font
@@ -44898,85 +43891,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R_US")
-		(at 241.3 198.12 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(dnp yes)
-		(fields_autoplaced yes)
-		(uuid "cfb60391-fc7a-4bab-98f6-0612ba12991d")
-		(property "Reference" "R11"
-			(at 243.84 196.8499 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "DNF"
-			(at 243.84 199.3899 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 242.316 198.374 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 241.3 198.12 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor, US symbol"
-			(at 241.3 198.12 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part" ""
-			(at 241.3 198.12 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "c9a7f855-f0db-403c-bad9-ecc7ef01e571")
-		)
-		(pin "2"
-			(uuid "ebe9ee0c-cc72-4995-8736-ab0003beeed5")
-		)
-		(instances
-			(project "shipwreckedpcb"
-				(path "/32cea5fd-2227-40ea-910d-55a625f2ade5"
-					(reference "R11")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:C_Small")
 		(at 345.44 124.46 90)
 		(unit 1)
@@ -45544,85 +44458,6 @@
 			(project "shipwreckedpcb"
 				(path "/32cea5fd-2227-40ea-910d-55a625f2ade5"
 					(reference "#PWR067")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R_US")
-		(at 241.3 186.69 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(dnp yes)
-		(fields_autoplaced yes)
-		(uuid "d7ef4e91-9323-4aeb-9e7d-d70c47f9d0c2")
-		(property "Reference" "R10"
-			(at 243.84 185.4199 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "DNF"
-			(at 243.84 187.9599 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 242.316 186.944 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 241.3 186.69 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor, US symbol"
-			(at 241.3 186.69 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part" ""
-			(at 241.3 186.69 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "5b5eb978-2a8d-459b-88b5-5e6e6afe4c05")
-		)
-		(pin "2"
-			(uuid "581eb818-2c87-4da9-8554-b7775acfd6a5")
-		)
-		(instances
-			(project ""
-				(path "/32cea5fd-2227-40ea-910d-55a625f2ade5"
-					(reference "R10")
 					(unit 1)
 				)
 			)
@@ -46864,71 +45699,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:+3V3")
-		(at 242.57 228.6 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "f006f5a1-37e9-4de0-a56b-186e8f38a9aa")
-		(property "Reference" "#PWR029"
-			(at 242.57 232.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 246.38 227.584 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 242.57 228.6 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 242.57 228.6 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 242.57 228.6 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "b4d526bb-825b-4e56-817d-f9bb3faca368")
-		)
-		(instances
-			(project "shipwreckedpcb"
-				(path "/32cea5fd-2227-40ea-910d-55a625f2ade5"
-					(reference "#PWR029")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:Earth")
 		(at 41.91 87.63 0)
 		(unit 1)
@@ -47118,136 +45888,6 @@
 			(project "shipwreckedpcb"
 				(path "/32cea5fd-2227-40ea-910d-55a625f2ade5"
 					(reference "#PWR073")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 242.57 205.74 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "f3a5487c-42ce-493d-b779-7ca80385eb4e")
-		(property "Reference" "#PWR027"
-			(at 242.57 209.55 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 246.38 204.724 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 242.57 205.74 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 242.57 205.74 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 242.57 205.74 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "b6010aa8-b8d9-436d-a625-1a241b18df71")
-		)
-		(instances
-			(project "shipwreckedpcb"
-				(path "/32cea5fd-2227-40ea-910d-55a625f2ade5"
-					(reference "#PWR027")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 242.57 217.17 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "f42393c1-6ef8-4bc2-9d56-c8e26db25b68")
-		(property "Reference" "#PWR028"
-			(at 242.57 220.98 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 246.126 216.154 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 242.57 217.17 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 242.57 217.17 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 242.57 217.17 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "9462603e-75d8-41d9-8af6-3e5e78fe474b")
-		)
-		(instances
-			(project "shipwreckedpcb"
-				(path "/32cea5fd-2227-40ea-910d-55a625f2ade5"
-					(reference "#PWR028")
 					(unit 1)
 				)
 			)
