@@ -603,7 +603,7 @@
           "group_by": false,
           "label": "LCSC Part",
           "name": "LCSC Part",
-          "show": true
+          "show": false
         }
       ],
       "filter_string": "",

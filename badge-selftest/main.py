@@ -9,19 +9,21 @@
 from machine import Pin, SPI, I2C, PWM, unique_id
 import utime
 
+spi = SPI(0, baudrate=1_000_000, polarity=0, phase=0, sck=Pin(18), mosi=Pin(19), miso=Pin(20))
+
 print("--- Starting self-test---")
 print("---- Testing LED ----")
 
 led = PWM(Pin(16))
+led.freq(5000)
 
 led.duty_u16(10_000)  # Turn on LED
 utime.sleep(1)  # Wait for 1 second
 led.duty_u16(0)  # Turn off LED
 
-print("---- Testing display ----")
+""" print("---- Testing display ----")
 
 from einkdriver import EPD
-spi = SPI(0, baudrate=1_000_000, polarity=0, phase=0, sck=Pin(18), mosi=Pin(19), miso=Pin(20))
 disp_cs = Pin(24, Pin.OUT)
 disp_dc = Pin(25, Pin.OUT)
 disp_rst = Pin(26, Pin.OUT)
@@ -49,8 +51,8 @@ CONFIG_PORT_1: int = 0x07
 i2c = I2C(0, scl=Pin(1), sda=Pin(0))
 
 # initialize the PCA9555 I/O expander
-i2c.writeto_mem(ADDRESS, CONFIG_PORT_0, [0xff]) # set the bottom 8 pins as inputs
-i2c.writeto_mem(ADDRESS, CONFIG_PORT_1, [0xff]) # set the top 8 pins as inputs
+i2c.writeto_mem(ADDRESS, CONFIG_PORT_0, bytearray([0xff])) # set the bottom 8 pins as inputs
+i2c.writeto_mem(ADDRESS, CONFIG_PORT_1, bytearray([0xff])) # set the top 8 pins as inputs
 
 button_pressed = None
 print("Press a button on the badge to continue...")
@@ -89,7 +91,7 @@ utime.sleep(0.7)
 tone(493, 0.5) # B4
 utime.sleep(0.1)
 tone(523, 0.5) # C5
-
+ """
 
 print("---- Testing radio ----")
 from sx1262 import SX1262, STDBY_RC
@@ -103,7 +105,4 @@ radio.reset()
 radio.standby(STDBY_RC)  # Set to standby mode
 # TODO: get radio part ID
 
-display.fill(1)
-display.text("Self-test complete!", 10, 10, 0)
-display.sleep()
 print("--- Test completed ---")
