@@ -31,7 +31,7 @@
 		(35 "F.Fab" user)
 		(33 "B.Fab" user)
 		(39 "User.1" user)
-		(41 "User.2" user)
+		(41 "User.2" user "SMT_Orientation")
 		(43 "User.3" user)
 		(45 "User.4" user)
 	)
@@ -6755,6 +6755,7 @@
 			(effects
 				(font
 					(size 0.001 0.001)
+					(thickness 0.15)
 				)
 			)
 		)
@@ -6766,6 +6767,7 @@
 			(effects
 				(font
 					(size 0.001 0.001)
+					(thickness 0.15)
 				)
 			)
 		)
@@ -7715,6 +7717,7 @@
 			(effects
 				(font
 					(size 0.001 0.001)
+					(thickness 0.15)
 				)
 			)
 		)
@@ -7726,6 +7729,7 @@
 			(effects
 				(font
 					(size 0.001 0.001)
+					(thickness 0.15)
 				)
 			)
 		)
@@ -12171,6 +12175,7 @@
 			(effects
 				(font
 					(size 0.001 0.001)
+					(thickness 0.15)
 				)
 				(justify mirror)
 			)
@@ -12183,6 +12188,7 @@
 			(effects
 				(font
 					(size 0.001 0.001)
+					(thickness 0.15)
 				)
 				(justify mirror)
 			)
@@ -15163,6 +15169,7 @@
 			(effects
 				(font
 					(size 0.001 0.001)
+					(thickness 0.15)
 				)
 				(justify mirror)
 			)
@@ -15175,6 +15182,7 @@
 			(effects
 				(font
 					(size 0.001 0.001)
+					(thickness 0.15)
 				)
 				(justify mirror)
 			)
@@ -19341,6 +19349,7 @@
 			(effects
 				(font
 					(size 0.001 0.001)
+					(thickness 0.15)
 				)
 				(justify mirror)
 			)
@@ -19353,6 +19362,7 @@
 			(effects
 				(font
 					(size 0.001 0.001)
+					(thickness 0.15)
 				)
 				(justify mirror)
 			)
@@ -23973,6 +23983,7 @@
 			(effects
 				(font
 					(size 0.001 0.001)
+					(thickness 0.15)
 				)
 				(justify mirror)
 			)
@@ -23985,6 +23996,7 @@
 			(effects
 				(font
 					(size 0.001 0.001)
+					(thickness 0.15)
 				)
 				(justify mirror)
 			)
@@ -25241,6 +25253,7 @@
 			(effects
 				(font
 					(size 0.001 0.001)
+					(thickness 0.15)
 				)
 				(justify mirror)
 			)
@@ -25253,6 +25266,7 @@
 			(effects
 				(font
 					(size 0.001 0.001)
+					(thickness 0.15)
 				)
 				(justify mirror)
 			)
@@ -29509,6 +29523,7 @@
 			(effects
 				(font
 					(size 0.001 0.001)
+					(thickness 0.15)
 				)
 				(justify mirror)
 			)
@@ -29521,6 +29536,7 @@
 			(effects
 				(font
 					(size 0.001 0.001)
+					(thickness 0.15)
 				)
 				(justify mirror)
 			)
@@ -33595,6 +33611,7 @@
 			(effects
 				(font
 					(size 0.001 0.001)
+					(thickness 0.15)
 				)
 				(justify mirror)
 			)
@@ -33607,6 +33624,7 @@
 			(effects
 				(font
 					(size 0.001 0.001)
+					(thickness 0.15)
 				)
 				(justify mirror)
 			)
@@ -40640,6 +40658,7 @@
 			(effects
 				(font
 					(size 0.001 0.001)
+					(thickness 0.15)
 				)
 				(justify mirror)
 			)
@@ -40652,6 +40671,7 @@
 			(effects
 				(font
 					(size 0.001 0.001)
+					(thickness 0.15)
 				)
 				(justify mirror)
 			)
@@ -50763,6 +50783,215 @@
 		(locked yes)
 		(layer "Edge.Cuts")
 		(uuid "ea2f0a79-a9fd-4d51-9a74-b80898158dfe")
+	)
+	(gr_circle
+		(center 174.3 65.320711)
+		(end 174.25 65.370711)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "User.2")
+		(uuid "19263bea-ecfb-442c-95d1-4ed866082eae")
+	)
+	(gr_circle
+		(center 143.1 103.05)
+		(end 143.05 103.1)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "User.2")
+		(uuid "2251bf7a-7e5f-4886-9482-7f40e7ad1fd9")
+	)
+	(gr_circle
+		(center 159.8 64.2)
+		(end 159.75 64.25)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "User.2")
+		(uuid "23301823-0476-4f5c-8b3b-e002aa090731")
+	)
+	(gr_circle
+		(center 159.2 88.85)
+		(end 159.15 88.9)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "User.2")
+		(uuid "31a25d8a-417c-4f39-9d87-53923ca97762")
+	)
+	(gr_circle
+		(center 123.15 67)
+		(end 123.1 67.05)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "User.2")
+		(uuid "34844be3-f14f-447a-a4d0-b7c194be2244")
+	)
+	(gr_circle
+		(center 138.95 68.2)
+		(end 138.9 68.25)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "User.2")
+		(uuid "36d8fe15-c71f-439e-b858-daaaece81f5b")
+	)
+	(gr_circle
+		(center 171.45 82.85)
+		(end 171.4 82.9)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "User.2")
+		(uuid "3ae9b1e1-7826-4a56-9d49-fb08baaa9916")
+	)
+	(gr_circle
+		(center 156.7 122.8)
+		(end 156.65 122.85)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "User.2")
+		(uuid "5408b672-87b8-471f-920a-90a5e97b9aa2")
+	)
+	(gr_circle
+		(center 163.25 122.3)
+		(end 163.2 122.35)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "User.2")
+		(uuid "5db6ce33-b401-4c47-afea-d88e31f63fb2")
+	)
+	(gr_circle
+		(center 153.25 119.6)
+		(end 153.2 119.65)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "User.2")
+		(uuid "601cc686-1f55-4b3b-8233-721d0ede7012")
+	)
+	(gr_circle
+		(center 159.25 122.8)
+		(end 159.2 122.85)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "User.2")
+		(uuid "6778dc8f-d9b7-4c26-ad09-3cd4ae9632ab")
+	)
+	(gr_circle
+		(center 127.8 63.35)
+		(end 127.75 63.4)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "User.2")
+		(uuid "79b67ad1-2fdb-4102-83f7-ba3bc0479976")
+	)
+	(gr_circle
+		(center 162.45 63.95)
+		(end 162.4 64)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "User.2")
+		(uuid "7ee8de37-5494-4526-b009-1fd5f90c863c")
+	)
+	(gr_circle
+		(center 140.65 117.8)
+		(end 140.6 117.85)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "User.2")
+		(uuid "80d3b8f1-00bb-4a50-9946-e36905a5ad80")
+	)
+	(gr_circle
+		(center 138.1 102.45)
+		(end 138.05 102.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "User.2")
+		(uuid "8b03cf63-d02c-4f33-ad2d-16651017824d")
+	)
+	(gr_circle
+		(center 129.15 83.65)
+		(end 129.1 83.7)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "User.2")
+		(uuid "ac22f844-9055-4aed-9312-8402c4b95e51")
+	)
+	(gr_circle
+		(center 158.3 114.85)
+		(end 158.25 114.9)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "User.2")
+		(uuid "b4a5b6e5-4357-48e0-bfe3-c530637df8c2")
+	)
+	(gr_circle
+		(center 157.25 102.1)
+		(end 157.2 102.15)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "User.2")
+		(uuid "e38218e1-261a-4146-8063-0a3c38c65aa4")
+	)
+	(gr_circle
+		(center 169.55 66.45)
+		(end 169.5 66.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "User.2")
+		(uuid "f69d84a6-3a14-4331-b73d-afdf2e097a62")
 	)
 	(gr_text "GND\n"
 		(at 121.95 97.9 0)
