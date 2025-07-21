@@ -101,7 +101,7 @@
 		(allow_soldermask_bridges_in_footprints yes)
 		(tenting front back)
 		(pcbplotparams
-			(layerselection 0x00000000_00000000_55555555_5755f5ff)
+			(layerselection 0x00000000_00000000_55555755_5755f5ff)
 			(plot_on_all_layers_selection 0x00000000_00000000_00000000_00000000)
 			(disableapertmacros no)
 			(usegerberextensions no)
@@ -50992,6 +50992,19 @@
 		(fill yes)
 		(layer "User.2")
 		(uuid "f69d84a6-3a14-4331-b73d-afdf2e097a62")
+	)
+	(gr_text "cyril li was here"
+		(at 135.65 83.55 -270)
+		(layer "F.SilkS")
+		(uuid "db69c555-39b2-4f3f-8aed-2cd0eb0589b5")
+		(effects
+			(font
+				(size 0.4 0.4)
+				(thickness 0.08)
+				(bold yes)
+			)
+			(justify left bottom)
+		)
 	)
 	(gr_text "GND\n"
 		(at 121.95 97.9 0)
