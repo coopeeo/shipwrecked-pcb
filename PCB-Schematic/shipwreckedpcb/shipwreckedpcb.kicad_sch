@@ -37146,7 +37146,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part" "C1588"
+		(property "LCSC Part" "C1660"
 			(at 234.95 77.47 0)
 			(effects
 				(font
@@ -37155,7 +37155,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "CC0603KRX7R9BB102"
+		(property "MPN" "0603CG3R3C500NT"
 			(at 234.95 77.47 0)
 			(effects
 				(font
@@ -37164,7 +37164,7 @@
 				(hide yes)
 			)
 		)
-		(property "old lcsc" "C100040"
+		(property "old lcsc" "C1660"
 			(at 234.95 77.47 0)
 			(effects
 				(font
@@ -41955,7 +41955,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part" "C14858"
+		(property "LCSC Part" "C1666"
 			(at 212.09 74.93 0)
 			(effects
 				(font
@@ -45429,7 +45429,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part" "C285885"
+		(property "LCSC Part" "C334262"
 			(at 228.6 74.93 0)
 			(effects
 				(font
@@ -48368,7 +48368,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part" "C1588"
+		(property "LCSC Part" "C1660"
 			(at 220.98 77.47 0)
 			(effects
 				(font
@@ -48377,7 +48377,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "CC0603KRX7R9BB102"
+		(property "MPN" "0603CG3R3C500NT"
 			(at 220.98 77.47 0)
 			(effects
 				(font
@@ -48386,7 +48386,7 @@
 				(hide yes)
 			)
 		)
-		(property "old lcsc" "C100040"
+		(property "old lcsc" "C1660"
 			(at 220.98 77.47 0)
 			(effects
 				(font

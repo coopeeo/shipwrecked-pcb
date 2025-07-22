@@ -5941,7 +5941,7 @@
 			(uuid "a0136e66-0eeb-4f5d-a6fd-4e854cb45fc9")
 			(effects
 				(font
-					(size 1 1)
+					(size 0.7 0.7)
 					(thickness 0.15)
 				)
 			)
@@ -6911,7 +6911,7 @@
 			(uuid "7b1b7e20-2571-4306-96a7-c40a4c71c72a")
 			(effects
 				(font
-					(size 0.001 0.001)
+					(size 0.7 0.7)
 					(thickness 0.15)
 				)
 			)
@@ -7899,7 +7899,7 @@
 			(uuid "692a8530-1510-4014-8313-cc1c794c77e5")
 			(effects
 				(font
-					(size 0.001 0.001)
+					(size 0.7 0.7)
 					(thickness 0.15)
 				)
 			)
@@ -12536,7 +12536,7 @@
 			(uuid "ea4a0fdf-4903-4d10-9f46-61ff4ffa266d")
 			(effects
 				(font
-					(size 0.001 0.001)
+					(size 0.7 0.7)
 					(thickness 0.15)
 				)
 				(justify mirror)
@@ -15670,7 +15670,7 @@
 			(uuid "fdfad2d1-2b9d-4c91-97e1-f7099b84b936")
 			(effects
 				(font
-					(size 0.001 0.001)
+					(size 0.7 0.7)
 					(thickness 0.15)
 				)
 				(justify mirror)
@@ -15846,12 +15846,12 @@
 		(descr "Capacitor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
 		(tags "capacitor")
 		(property "Reference" "C69"
-			(at 0 1.43 90)
+			(at -2.025 0 0)
 			(layer "B.SilkS")
 			(uuid "cc402175-8e33-4158-b3ca-8410f400764f")
 			(effects
 				(font
-					(size 1 1)
+					(size 0.7 0.7)
 					(thickness 0.15)
 				)
 				(justify mirror)
@@ -15897,7 +15897,7 @@
 				(justify mirror)
 			)
 		)
-		(property "LCSC Part" "C1588"
+		(property "LCSC Part" "C1660"
 			(at 0 0 90)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -15911,7 +15911,7 @@
 				(justify mirror)
 			)
 		)
-		(property "MPN" "CC0603KRX7R9BB102"
+		(property "MPN" "0603CG3R3C500NT"
 			(at 0 0 90)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -15925,7 +15925,7 @@
 				(justify mirror)
 			)
 		)
-		(property "old lcsc" "C100040"
+		(property "old lcsc" "C1660"
 			(at 0 0 90)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -16663,7 +16663,7 @@
 			(uuid "8a35eabb-8793-4208-8363-91e5236beafa")
 			(effects
 				(font
-					(size 1 1)
+					(size 0.7 0.7)
 					(thickness 0.15)
 				)
 				(justify mirror)
@@ -20238,7 +20238,7 @@
 			(uuid "87a16105-45d2-4def-b947-338880ee781f")
 			(effects
 				(font
-					(size 0.001 0.001)
+					(size 0.7 0.7)
 					(thickness 0.15)
 				)
 				(justify mirror)
@@ -21334,7 +21334,7 @@
 			(uuid "ec4bc6ff-74ca-4533-aca4-29aba2683ae2")
 			(effects
 				(font
-					(size 1 1)
+					(size 0.7 0.7)
 					(thickness 0.15)
 				)
 				(justify mirror)
@@ -21380,7 +21380,7 @@
 				(justify mirror)
 			)
 		)
-		(property "LCSC Part" "C285885"
+		(property "LCSC Part" "C334262"
 			(at 0 0 0)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -24786,12 +24786,12 @@
 		(descr "Capacitor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
 		(tags "capacitor")
 		(property "Reference" "C68"
-			(at 0 1.43 90)
+			(at -2.1 -0.1 0)
 			(layer "B.SilkS")
 			(uuid "66e37974-472c-42d2-b5a6-2b0f12b0500b")
 			(effects
 				(font
-					(size 1 1)
+					(size 0.7 0.7)
 					(thickness 0.15)
 				)
 				(justify mirror)
@@ -24837,7 +24837,7 @@
 				(justify mirror)
 			)
 		)
-		(property "LCSC Part" "C1588"
+		(property "LCSC Part" "C1660"
 			(at 0 0 90)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -24851,7 +24851,7 @@
 				(justify mirror)
 			)
 		)
-		(property "MPN" "CC0603KRX7R9BB102"
+		(property "MPN" "0603CG3R3C500NT"
 			(at 0 0 90)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -24865,7 +24865,7 @@
 				(justify mirror)
 			)
 		)
-		(property "old lcsc" "C100040"
+		(property "old lcsc" "C1660"
 			(at 0 0 90)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -25333,7 +25333,7 @@
 				(justify mirror)
 			)
 		)
-		(property "LCSC Part" "C14858"
+		(property "LCSC Part" "C1666"
 			(at 0 0 0)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -25536,7 +25536,7 @@
 			(uuid "fc438372-a83a-4521-b382-e18a4a502a76")
 			(effects
 				(font
-					(size 0.001 0.001)
+					(size 0.7 0.7)
 					(thickness 0.15)
 				)
 				(justify mirror)
@@ -26547,7 +26547,7 @@
 			(uuid "84953586-2b20-4690-a337-8695d77daeef")
 			(effects
 				(font
-					(size 1 1)
+					(size 0.7 0.7)
 					(thickness 0.15)
 				)
 				(justify mirror)
@@ -26834,7 +26834,7 @@
 			(uuid "23b30d27-bab9-4a37-b4fc-15c308db84c2")
 			(effects
 				(font
-					(size 0.001 0.001)
+					(size 0.7 0.7)
 					(thickness 0.15)
 				)
 				(justify mirror)
@@ -31258,7 +31258,7 @@
 			(uuid "1ba79910-ad0e-47e0-ade6-c5db3b33451c")
 			(effects
 				(font
-					(size 0.001 0.001)
+					(size 0.7 0.7)
 					(thickness 0.15)
 				)
 				(justify mirror)
@@ -33133,7 +33133,7 @@
 			(uuid "2976a1f4-8ebe-4e53-84fa-faaee8eed852")
 			(effects
 				(font
-					(size 1.5 1.5)
+					(size 0.7 0.7)
 					(thickness 0.3)
 				)
 				(justify mirror)
@@ -35430,7 +35430,7 @@
 			(uuid "4d3a012c-b0ee-498d-b2d7-0da0ca76f1bc")
 			(effects
 				(font
-					(size 0.001 0.001)
+					(size 0.7 0.7)
 					(thickness 0.15)
 				)
 				(justify mirror)
@@ -39768,7 +39768,7 @@
 			(uuid "4f189de4-9b80-48ef-bc11-d41c3ffc4edb")
 			(effects
 				(font
-					(size 1.5 1.5)
+					(size 0.7 0.7)
 					(thickness 0.3)
 				)
 				(justify mirror)
@@ -42757,7 +42757,7 @@
 			(uuid "fccad5e5-8c5c-4d29-8f3e-ba522776cc5b")
 			(effects
 				(font
-					(size 0.001 0.001)
+					(size 0.7 0.7)
 					(thickness 0.15)
 				)
 				(justify mirror)
@@ -55089,6 +55089,15 @@
 		(free yes)
 		(net 3)
 		(uuid "b117ae24-96a6-4849-abd5-01517aca61e9")
+	)
+	(via
+		(at 163.95 63.2)
+		(size 0.6)
+		(drill 0.3)
+		(layers "F.Cu" "B.Cu")
+		(free yes)
+		(net 3)
+		(uuid "b16bcdee-513c-4520-910b-93ce66ee7258")
 	)
 	(via
 		(at 153.5 63.5)
