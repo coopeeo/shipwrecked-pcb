@@ -603,13 +603,13 @@
           "group_by": false,
           "label": "old lcsc",
           "name": "old lcsc",
-          "show": true
+          "show": false
         },
         {
           "group_by": false,
           "label": "MPN",
           "name": "MPN",
-          "show": true
+          "show": false
         },
         {
           "group_by": false,
