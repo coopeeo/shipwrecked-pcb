@@ -4,8 +4,8 @@ import utime
 #EPD GPIO
 isEPD_W21_BUSY=machine.Pin(27, machine.Pin.IN, machine.Pin.PULL_DOWN) #BUSY
 EPD_W21_RST= machine.Pin(26, machine.Pin.OUT)#RESE
-EPD_W21_DC= machine.Pin(25, machine.Pin.OUT)#DC
-EPD_W21_CS= machine.Pin(24, machine.Pin.OUT)#CS
+EPD_W21_DC= machine.Pin(22, machine.Pin.OUT)#DC
+EPD_W21_CS= machine.Pin(17, machine.Pin.OUT)#CS
 #SPI0
 spi_sck=machine.Pin(18) #SCLK
 spi_tx=machine.Pin(19)#SDIN

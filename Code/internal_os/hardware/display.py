@@ -25,6 +25,11 @@ class BadgeDisplay:
         """Reset the idle timer to prevent the display from sleeping for another 5 seconds"""
         self.idle_timer.init(mode=Timer.ONE_SHOT, period=5000, callback=lambda _: self.sleep())
 
+    def show(self):
+        """Push the contents of the internal framebuffer to the display"""
+        self.reset_idle_timer()
+        self.display.display()
+
     def sleep(self):
         """Put the display to sleep to save power"""
         self.display.sleep()

@@ -42,6 +42,12 @@ class AppRepr:
         app_repr.app_number = json_data.get("app_number", "")
         return app_repr
 
+type AppContext = int
+class AppContexts:
+    ASLEEP: AppContext = 0
+    FOREGROUND: AppContext = 1
+    BACKGROUND: AppContext = 2
+
 async def acquire_lock(lock: _thread.LockType, timeout: Optional[float] = None):
     """
     Acquire a lock asynchronously with an optional timeout.
@@ -71,7 +77,7 @@ def app_thread(app_repr: AppRepr, manager: 'AppManager') -> None:
     logger = logging.getLogger("App-" + app_repr.display_name)
     logger.info(f"Starting app: {app_repr.display_name} from {app_repr.app_path}")
     # Acquire the lock before running the app
-    manager.app_lock.acquire(1) # 1 means block until we get it
+    manager.fg_app_lock.acquire(1) # 1 means block until we get it
     logger.debug(f"Acquired app lock")
     try:
         applib = __import__(app_repr.app_path + '.main', globals(), locals(), ['App'])
@@ -89,7 +95,7 @@ def app_thread(app_repr: AppRepr, manager: 'AppManager') -> None:
         logger.error(f"Error running app {app_repr.display_name}: {e}")
     finally:
         # Release the lock when done
-        manager.app_lock.release()
+        manager.fg_app_lock.release()
 
 class AppManager:
     """
@@ -101,8 +107,10 @@ class AppManager:
         self.logger.setLevel(logging.INFO)
 
         self.selected_app: Optional[AppRepr] = None  # The currently selected app, if any
-        self.app_running: bool = False  # Whether an app should currently be running
-        self.app_lock: _thread.LockType = _thread.allocate_lock()
+        self.fg_app_running: bool = False  # Whether an app should currently be running
+        self.fg_app_lock: _thread.LockType = _thread.allocate_lock()
+
+        self.backgrounded_apps: List[AppRepr] = []  # Apps that are running in the background
 
         self.registered_apps: List[AppRepr] = []
         self.scan_for_apps()
@@ -150,23 +158,23 @@ class AppManager:
         Launch the specified app.
         :param app_repr: The AppRepr instance representing the app to launch.
         """
-        if self.app_running:
+        if self.fg_app_running:
             # we need to stop the currently running app first
-            self.app_running = False
+            self.fg_app_running = False
             self.logger.info(f"Stopping currently running app: {self.selected_app.display_name if self.selected_app else 'None'}")
             # The app should see that it's supposed to stop because app_running is set to False.
             # we'll know when that happens because it will release the app_lock.
             try:
-                await acquire_lock(self.app_lock, timeout=5.0)
+                await acquire_lock(self.fg_app_lock, timeout=5.0)
             except TimeoutError as e:
                 self.logger.error(f"Failed to stop the currently running app within timeout: {e}")
                 # TODO: figure out how to hard-stop the other thread.
                 return
             # once we have it, we can release it - the app thread should have stopped itself
-            self.app_lock.release()
+            self.fg_app_lock.release()
         
         # Now we can start the new app
         self.selected_app = app_repr
         self.logger.info(f"Creating app thread for: {app_repr.display_name} from {app_repr.app_path}")
-        self.app_running = True
+        self.fg_app_running = True
         _thread.start_new_thread(app_thread, (app_repr, self))
