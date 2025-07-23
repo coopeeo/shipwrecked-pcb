@@ -21,27 +21,26 @@ led.duty_u16(10_000)  # Turn on LED
 utime.sleep(1)  # Wait for 1 second
 led.duty_u16(0)  # Turn off LED
 
-print("---- Testing display ----")
+""" print("---- Testing display ----")
 
 from einkdriver import EPD
-disp_cs = Pin(17, Pin.OUT)
-disp_dc = Pin(22, Pin.OUT)
+disp_cs = Pin(24, Pin.OUT)
+disp_dc = Pin(25, Pin.OUT)
 disp_rst = Pin(26, Pin.OUT)
 disp_busy = Pin(27, Pin.IN)
-while True:
-    print("Initializing E-Ink display...")
-    display = EPD(spi, disp_cs, disp_dc, disp_rst, disp_busy)
-    display.init()
 
-    print("Displaying base image...")
-    display.fill(1)  # Fill with white
-    display.text("Shipwrecked Badge Self-test", 10, 10, 0)
-    display.text("Press any button on the badge", 10, 30, 0)
-    display.text(f"Badge ID: {unique_id().hex()[-4:]}", 10, 50, 0) 
-    display.display()
-    display.sleep()
-    utime.sleep(5)  # Allow time for display to update
-"""
+print("Initializing E-Ink display...")
+display = EPD(spi, disp_cs, disp_dc, disp_rst, disp_busy)
+display.init()
+
+print("Displaying base image...")
+display.fill(1)  # Fill with white
+display.text("Shipwrecked Badge Self-test", 10, 10, 0)
+display.text("Press any button on the badge", 10, 30, 0)
+display.text(f"Badge ID: {unique_id().hex()[-4:]}", 10, 50, 0) 
+display.display()
+display.sleep()
+
 print("---- Testing buttons ----")
 ADDRESS: int = 0x20  # I2C address of PCA9555
 INPUT_PORT_0: int = 0x00
@@ -92,7 +91,7 @@ utime.sleep(0.7)
 tone(493, 0.5) # B4
 utime.sleep(0.1)
 tone(523, 0.5) # C5
-"""
+ """
 
 print("---- Testing radio ----")
 from sx1262 import SX1262, STDBY_RC
