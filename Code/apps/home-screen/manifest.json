@@ -1,6 +1,6 @@
 {
     "displayName": "home-screen",
-    "logoPath": "logo.bmp",
+    "logoPath": "home-icon.pbm",
     "fullScreen": "false",
     "suppressNotifs": "false",
     "permissions": []

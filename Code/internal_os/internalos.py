@@ -11,6 +11,10 @@ from internal_os.contacts import ContactsManager
 from internal_os.notifs import NotifManager
 from internal_os.apps import AppManager
 
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
 # enable error reports for errors in ISRs
 import micropython
 micropython.alloc_emergency_exception_buf(100)
@@ -51,9 +55,8 @@ class InternalOS:
         """
         # To do in this function:
         # 1. Initialize hardware, IRQs, state, etc.
-        # 2. ~~Start the app thread.~~
-        # 3. Schedule the needed background tasks.
-        # 4. Start the asyncio event loop.
+        # 2. Schedule the needed background tasks.
+        # 3. Start the asyncio event loop.
 
         # Step 1:
         # hardware
@@ -70,12 +73,13 @@ class InternalOS:
         self.apps = AppManager(self.buttons)
 
 
-        # Step 3:
+        # Step 2:
         asyncio.create_task(self.apps.scan_forever(interval=15)) # TODO: lower this interval in prod?
         asyncio.create_task(self.apps.home_button_watcher())
+        asyncio.create_task(self.display.idle_when_inactive())
         asyncio.create_task(launch_test_app(self.apps)) # TODO: remove this when the app manager is implemented
 
-        # Step 4:
+        # Step 3:
         asyncio.run(self.run_async())
 
     async def run_async(self):

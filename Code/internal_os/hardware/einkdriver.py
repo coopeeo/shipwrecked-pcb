@@ -259,8 +259,9 @@ class EPD:
         Args:
             buffer: Buffer to display (uses internal buffer if None)
         """
-        self.reset()
-        self.init_full_mode()
+        #self.reset()
+        #self.init_full_mode()
+        self.init()
         
         if buffer is None:
             buffer = self.buffer
@@ -588,3 +589,7 @@ class EPD:
     def text(self, text, x, y, color=0):
         """Draw text"""
         self.framebuf.text(text, x, y, color)
+    
+    def blit(self, src, x, y):
+        """Blit a source buffer onto the display at (x, y)"""
+        self.framebuf.blit(src, x, y)

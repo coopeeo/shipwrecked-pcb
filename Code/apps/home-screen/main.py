@@ -10,17 +10,55 @@ from internal_os.internalos import InternalOS
 internal_os = InternalOS.instance()
 
 class App(badge.BaseApp):
+    def __init__(self):
+        self.cursor_pos = 0
+        self.old_button = False
+        self.button_time = utime.ticks_ms()
+
     def on_open(self) -> None:
         self.logger.info("Home screen opening...")
-        # TODO: do display stuff, etc.
+        self.cursor_pos = 0
+        self.render_home_screen()
+
     def loop(self) -> None:
         if badge.input.get_button(1):
-            # TODO: launch apps more cleverer
-            hello_world_app = internal_os.apps.get_app_by_path('/apps/hello-world')
-            if not hello_world_app:
-                self.logger.error("Hello World app not found. Cannot launch test app.")
-                return
-            self.launch_app(hello_world_app)
+            if not self.old_button:
+                # just pressed
+                self.button_time = utime.ticks_ms()
+            if utime.ticks_diff(utime.ticks_ms(), self.button_time) > 700:
+                # long press
+                self.logger.info(f"Launching app at position {self.cursor_pos}")
+                self.launch_app(internal_os.apps.registered_apps[self.cursor_pos])
+                return # don't run the rest of the loop - return control to the OS
+            self.old_button = True
+        else:
+            if self.old_button:
+                # just released
+                self.logger.info("Button 1 pressed")
+                self.cursor_pos = (self.cursor_pos + 1) % len(internal_os.apps.registered_apps)
+                self.render_home_screen()
+            self.old_button = False
+
+    def render_home_screen(self):
+        """Render the home screen display."""
+        badge.display.fill(1)
+        for i, app in enumerate(internal_os.apps.registered_apps):
+            current_screen = self.cursor_pos // 6
+            if i < current_screen * 6 or i >= (current_screen + 1) * 6:
+                continue
+            app_x = (i % 3) * 66
+            app_y = (i // 3) * 58 + 11
+            self.draw_app_icon(app, app_x, app_y, self.cursor_pos == i)
+        badge.display.show()
+
+    def draw_app_icon(self, app_repr, x, y, selected):
+        fb = badge.display.import_pbm(app_repr.logo_path)
+        badge.display.blit(fb, x+9, y)
+        if selected:
+            badge.display.rect(x+7, y-2, 52, 52, 0)
+        for i, frag in enumerate([app_repr.display_name[j:j+7] for j in range(0, len(app_repr.display_name), 7)]):
+            badge.display.text(frag, x+5, y+50+i*9, 0)
+
     def launch_app(self, app_repr) -> None:
         """
         Launch the specified app.

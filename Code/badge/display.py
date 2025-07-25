@@ -4,6 +4,7 @@ except ImportError:
     # we're on an MCU, typing is not available
     pass
 
+import framebuf
 import _thread
 
 def _is_display_allowed() -> bool:
@@ -132,3 +133,38 @@ def text(text: str, x: int, y: int, color: int = 0) -> None:
     if not _is_display_allowed():
         raise RuntimeError("Cannot call display functions from a backgrounded app context.")
     internal_os.display.text(text, x, y, color)
+
+def blit(fb: framebuf.FrameBuffer, x: int, y: int) -> None:
+    """
+    Blit a FrameBuffer onto the display.
+    :param fb: The FrameBuffer to blit.
+    :param x: X coordinate to start blitting.
+    :param y: Y coordinate to start blitting.
+    """
+    if not _is_display_allowed():
+        raise RuntimeError("Cannot call display functions from a backgrounded app context.")
+    internal_os.display.blit(fb, x, y)
+
+def import_pbm(file_path: str) -> framebuf.FrameBuffer:
+    """
+    Import a PBM image file (type P4) and return it as a FrameBuffer.
+    :param file_path: Path to the PBM file.
+    :return: FrameBuffer object containing the image.
+    this converter is known to work: https://convertio.co/png-pbm/
+    """
+    with open(file_path, 'rb') as f:
+        # Read the header
+        header = f.readline().strip()
+        if header != b'P4':
+            raise ValueError("File is not a valid binary PBM file.")
+        # Read the width and height
+        dimensions = f.readline().strip()
+        width, height = map(int, dimensions.split())
+        # Read the pixel data
+        pixel_data = bytearray(~b & 0xFF for b in f.read()) # the e-ink means the PBM format swaps black and white
+        if len(pixel_data) != (width * height + 7) // 8:
+            raise ValueError("Pixel data does not match specified dimensions.")
+        # Create a FrameBuffer from the pixel data
+        fb = framebuf.FrameBuffer(pixel_data, width, height, framebuf.MONO_HLSB)
+    return fb
+    

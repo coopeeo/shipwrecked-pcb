@@ -36,7 +36,7 @@ class AppRepr:
         app_repr = cls()
         app_repr.app_path = path
         app_repr.display_name = json_data.get("displayName", "")
-        app_repr.logo_path = json_data.get("logoPath", "")
+        app_repr.logo_path = path + "/" + json_data.get("logoPath", "")
         app_repr.full_screen = json_data.get("fullScreen", False)
         app_repr.suppress_notifs = json_data.get("suppressNotifs", False)
         app_repr.permissions = json_data.get("permissions", [])
@@ -109,7 +109,7 @@ def app_thread(app_repr: AppRepr, manager: 'AppManager') -> None:
         launch_logger.info(f"App {app_repr.display_name} has finished running.")
 
     except Exception as e:
-        launch_logger.error(f"Error running app {app_repr.display_name}: {e}")
+        launch_logger.exception(e, f"Error running app {app_repr.display_name}:")
     finally:
         # Release the lock when done
         manager.fg_app_lock.release()
@@ -153,7 +153,15 @@ class AppManager:
                         self.logger.info(f"Registered app: {app_repr.display_name} from {app_dir}")
                         if app_repr.display_name.strip() == "":
                             self.logger.warning(f"App in {app_dir} has no display name. Please fix the manifest.")
-                        # TODO: add addl checks for things like logo path existing, etc.
+                        # check if app logo path exists
+                        try:
+                            with open(app_repr.logo_path, 'rb') as logo_file:
+                                pass
+                        except OSError as e:
+                            self.logger.warning(f"App {app_repr.display_name} in {app_dir} has a logo path that does not exist: {app_repr.logo_path}. Please fix the manifest. Error: {e}")
+                            app_repr.logo_path = "/missingtex.pbm"
+
+                        # TODO: add addl checks for things like paths existing, etc.
                 except OSError as e:
                     self.logger.error(f"Failed to read manifest for app in {app_dir}. Skipping. Error: {e}")
                 except json.JSONDecodeError as e:
