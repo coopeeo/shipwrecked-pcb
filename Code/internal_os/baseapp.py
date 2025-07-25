@@ -1,7 +1,10 @@
+import logging
+
 class BaseApp:
     """
     An abstract class that applications must inherit from.
     """
+    logger: logging.Logger # set up by the app launcher
     def on_open(self) -> None:
         """
         Run once when the app is launched.

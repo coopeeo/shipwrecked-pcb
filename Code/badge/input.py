@@ -1,8 +1,17 @@
+try:
+    from typing import List, TypeAlias
+except ImportError:
+    # we're on an MCU, typing is not available
+    pass
+
+import logging
+logger = logging.getLogger("Buttons")
+
 from internal_os.internalos import InternalOS
 
 internal_os = InternalOS.instance()
 
-type Button = int
+Button: TypeAlias = int
 class Buttons:
     """
     An enum of all the available buttons.
@@ -34,4 +43,6 @@ def get_button(button: Button) -> bool:
     :param button: The button to check.
     :return: True if the button is pressed, False otherwise.
     """
+    if button == 0:
+        logger.warning("Button 0 is the home button. Your application cannot access it. If you want to detect yourself being closed, implement the on_close function.")
     return internal_os.buttons.is_pressed(button)

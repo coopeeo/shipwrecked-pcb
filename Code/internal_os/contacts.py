@@ -40,10 +40,15 @@ class ContactsManager:
         try:
             with open(contacts_file, 'r') as f:
                 json.load(f)  # Validate JSON format
-        except FileNotFoundError:
-            self.logger.warning(f"Contacts file not found: {contacts_file}. Creating a new one.")
-            with open(contacts_file, 'w') as f:
-                json.dump([], f)
+        except OSError as e:
+            if e.errno == 2:  # File not found
+                self.logger.warning(f"Contacts file not found: {contacts_file}. Creating a new one.")
+                with open(contacts_file, 'w') as f:
+                    json.dump([], f)
+            else:
+                self.logger.error(f"Error reading contacts file: {e}. Resetting to empty contacts.")
+                with open(contacts_file, 'w') as f:
+                    json.dump([], f)
         except json.JSONDecodeError:
             self.logger.error(f"Invalid JSON format in contacts file: {contacts_file}. Resetting to empty contacts.")
             with open(contacts_file, 'w') as f:

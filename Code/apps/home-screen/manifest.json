@@ -1,0 +1,7 @@
+{
+    "displayName": "home-screen",
+    "logoPath": "logo.bmp",
+    "fullScreen": "false",
+    "suppressNotifs": "false",
+    "permissions": []
+}

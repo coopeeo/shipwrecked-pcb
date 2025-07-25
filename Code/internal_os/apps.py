@@ -1,13 +1,15 @@
 try:
-    from typing import List, Optional, Dict
+    from typing import List, Optional, Dict, TypeAlias
 except ImportError:
     # we're on an MCU, typing is not available
     pass
 import asyncio
+from internal_os.baseapp import BaseApp
 import logging
 import os
 import json
 import _thread
+import machine
 import utime
 
 class AppRepr:
@@ -33,20 +35,27 @@ class AppRepr:
         json_data = json.loads(json_str)
         app_repr = cls()
         app_repr.app_path = path
-        app_repr.display_name = json_data.get("display_name", "")
-        app_repr.logo_path = json_data.get("logo_path", "")
-        app_repr.full_screen = json_data.get("full_screen", False)
-        app_repr.suppress_notifs = json_data.get("suppress_notifs", False)
+        app_repr.display_name = json_data.get("displayName", "")
+        app_repr.logo_path = json_data.get("logoPath", "")
+        app_repr.full_screen = json_data.get("fullScreen", False)
+        app_repr.suppress_notifs = json_data.get("suppressNotifs", False)
         app_repr.permissions = json_data.get("permissions", [])
-        app_repr.radio_settings = json_data.get("radio_settings", {})
-        app_repr.app_number = json_data.get("app_number", "")
+        app_repr.radio_settings = json_data.get("radioSettings", {})
+        app_repr.app_number = json_data.get("appNumber", "")
         return app_repr
 
-type AppContext = int
+AppContext: TypeAlias = int
 class AppContexts:
     ASLEEP: AppContext = 0
     FOREGROUND: AppContext = 1
     BACKGROUND: AppContext = 2
+
+class TimeoutError(Exception):
+    """
+    Custom exception for timeout errors.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
 
 async def acquire_lock(lock: _thread.LockType, timeout: Optional[float] = None):
     """
@@ -74,25 +83,33 @@ def app_thread(app_repr: AppRepr, manager: 'AppManager') -> None:
     :param manager: The AppManager instance managing the app.
     """
     # set up logging
-    logger = logging.getLogger("App-" + app_repr.display_name)
-    logger.info(f"Starting app: {app_repr.display_name} from {app_repr.app_path}")
+    launch_logger = logging.getLogger("AppLaunch-" + app_repr.display_name)
+    launch_logger.setLevel(logging.DEBUG)
+    launch_logger.info(f"Starting app: {app_repr.display_name} from {app_repr.app_path}")
     # Acquire the lock before running the app
     manager.fg_app_lock.acquire(1) # 1 means block until we get it
-    logger.debug(f"Acquired app lock")
+    launch_logger.debug(f"Acquired app lock")
     try:
         applib = __import__(app_repr.app_path + '.main', globals(), locals(), ['App'])
-        logger.debug(f"Imported app module: {app_repr.app_path}.main")
+        launch_logger.debug(f"Imported app module: {app_repr.app_path}.main")
         # check that the app has an App class, and that that class descends from BaseApp
         if not hasattr(applib, 'App'):
-            raise ImportError(f"App {app_repr.display_name} does not define an 'App' class.")
+            raise ImportError(f"App {app_repr.display_name} does not define an class named `App`.")
         app_class = applib.App
-        if not issubclass(app_class, applib.BaseApp):
-            raise TypeError(f"App {app_repr.display_name} does not inherit from BaseApp.")
+        if BaseApp not in app_class.__bases__: # cannot use issubclass because the reexport from badge changes its identity
+            raise TypeError(f"App {app_repr.display_name} does not inherit from `badge.BaseApp`.")
+        app_logger = logging.getLogger(app_repr.display_name)
+        app_logger.setLevel(logging.DEBUG)
         app = app_class()
-        # TODO: build out the app API, then actually run the app here
+        app.logger = app_logger
+
+        app.on_open()  # Call the on_open method
+        while manager.fg_app_running:
+            app.loop()
+        launch_logger.info(f"App {app_repr.display_name} has finished running.")
 
     except Exception as e:
-        logger.error(f"Error running app {app_repr.display_name}: {e}")
+        launch_logger.error(f"Error running app {app_repr.display_name}: {e}")
     finally:
         # Release the lock when done
         manager.fg_app_lock.release()
@@ -102,9 +119,11 @@ class AppManager:
     The AppManager class is responsible for managing the apps on the badge.
     It handles app registration, loading, and execution.
     """
-    def __init__(self) -> None:
+    def __init__(self, buttons) -> None:
         self.logger = logging.getLogger("AppManager")
-        self.logger.setLevel(logging.INFO)
+        self.logger.setLevel(logging.DEBUG)
+
+        self.buttons = buttons
 
         self.selected_app: Optional[AppRepr] = None  # The currently selected app, if any
         self.fg_app_running: bool = False  # Whether an app should currently be running
@@ -120,17 +139,21 @@ class AppManager:
         Scan for apps in the system and register new ones.
         """
         self.logger.info("Scanning for apps...")
-        app_dirs = [d[0] for d in os.ilistdir('/apps') if d[1] == 0x4000]  # 0x4000 is the directory type
+        app_dirs = ['/apps/' + d[0] for d in os.ilistdir('/apps') if d[1] == 0x4000]  # 0x4000 is the directory type
         known_apps = {app.app_path: app for app in self.registered_apps}
         for app_dir in app_dirs:
             if app_dir not in known_apps:
                 manifest_path = app_dir + '/manifest.json'
+                self.logger.debug(f"Checking for manifest in {manifest_path}")
                 try:
                     with open(manifest_path, 'r') as f:
                         json_data = f.read()
                         app_repr = AppRepr.from_json(app_dir, json_data)
                         self.registered_apps.append(app_repr)
                         self.logger.info(f"Registered app: {app_repr.display_name} from {app_dir}")
+                        if app_repr.display_name.strip() == "":
+                            self.logger.warning(f"App in {app_dir} has no display name. Please fix the manifest.")
+                        # TODO: add addl checks for things like logo path existing, etc.
                 except OSError as e:
                     self.logger.error(f"Failed to read manifest for app in {app_dir}. Skipping. Error: {e}")
                 except json.JSONDecodeError as e:
@@ -167,8 +190,11 @@ class AppManager:
             try:
                 await acquire_lock(self.fg_app_lock, timeout=5.0)
             except TimeoutError as e:
-                self.logger.error(f"Failed to stop the currently running app within timeout: {e}")
-                # TODO: figure out how to hard-stop the other thread.
+                self.logger.critical(f"Failed to stop the currently running app within timeout: {e}")
+                self.logger.critical(f"Soft-resetting the badge in order to recover.")
+                self.logger.critical(f"This is caused by a bug in {self.selected_app.display_name if self.selected_app else 'the currently running app'} (usually an infinite loop).")
+                self.logger.critical(f"Please report this bug to the app's developers.")
+                machine.soft_reset()  # Reset the badge to recover from the stuck app
                 return
             # once we have it, we can release it - the app thread should have stopped itself
             self.fg_app_lock.release()
@@ -178,3 +204,30 @@ class AppManager:
         self.logger.info(f"Creating app thread for: {app_repr.display_name} from {app_repr.app_path}")
         self.fg_app_running = True
         _thread.start_new_thread(app_thread, (app_repr, self))
+    
+    def get_app_by_path(self, app_path: str) -> Optional[AppRepr]:
+        """
+        Get an app by its path.
+        :param app_path: The path of the app to find.
+        :return: The AppRepr instance if found, None otherwise.
+        """
+        for app in self.registered_apps:
+            if app.app_path == app_path:
+                return app
+        return None
+    
+    async def home_button_watcher(self) -> None:
+        """
+        Watch for the home button press and handle it.
+        This will stop the currently running app and return to the home screen.
+        """
+        while True:
+            await asyncio.sleep(0.1)
+            if self.buttons.is_pressed(0) and self.fg_app_running:  # Assuming button 0 is the home button
+                self.logger.info("Home button pressed. Stopping current app and launching home-screen.")
+                home_app = self.get_app_by_path('/apps/home-screen')
+                if not home_app:
+                    self.logger.error("Home app not found. Cannot return to home screen.")
+                    continue
+                await self.launch_app(home_app)
+
