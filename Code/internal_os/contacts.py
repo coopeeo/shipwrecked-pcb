@@ -11,10 +11,11 @@ class Contact:
     """
     Represents a contact.
     """
-    def __init__(self, name: str, pronouns: str, badge_id: str):
+    def __init__(self, name: str, pronouns: str, badge_id: str, handle: str):
         self.name = name
         self.pronouns = pronouns
         self.badge_id = badge_id
+        self.handle = handle
 
     def __repr__(self):
         return f"Contact(name={self.name}, pronouns={self.pronouns}, badge_id={self.badge_id})"
@@ -26,7 +27,8 @@ class Contact:
         return {
             'name': self.name,
             'pronouns': self.pronouns,
-            'badge_id': self.badge_id
+            'badge_id': self.badge_id,
+            'handle': self.handle
         }
 
 class ContactsManager:
@@ -79,11 +81,11 @@ class ContactsManager:
         except Exception as e:
             self.logger.error(f"Error saving contacts: {e}")
 
-    def add_contact(self, name: str, pronouns: str, badge_id: str) -> None:
+    def add_contact(self, name: str, pronouns: str, badge_id: str, handle: str) -> None:
         """
         Add a new contact to the contacts list.
         """
-        new_contact = Contact(name=name, pronouns=pronouns, badge_id=badge_id)
+        new_contact = Contact(name=name, pronouns=pronouns, badge_id=badge_id, handle=handle)
         self.contacts.append(new_contact)
         self.save_contacts()
 

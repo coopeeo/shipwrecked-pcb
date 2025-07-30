@@ -4,7 +4,11 @@ except ImportError:
     # we're on an MCU, typing is not available
     pass
 import asyncio
+import sys
 from internal_os.baseapp import BaseApp
+from internal_os.hardware.display import BadgeDisplay
+from internal_os.hardware.buttons import BadgeButtons
+from io import StringIO
 import logging
 import os
 import json
@@ -109,7 +113,23 @@ def app_thread(app_repr: AppRepr, manager: 'AppManager') -> None:
         launch_logger.info(f"App {app_repr.display_name} has finished running.")
 
     except Exception as e:
-        launch_logger.exception(e, f"Error running app {app_repr.display_name}:")
+        launch_logger.exception(e, f"Error in {app_repr.display_name}:")
+        # Display the error on the badge
+        # TODO:
+        try:
+            filelike = StringIO()
+            sys.print_exception(e, filelike)
+            manager.display.fill(1)  # Clear the display
+            manager.display.text(f"Error in {app_repr.display_name}:", 0, 0)
+            linecount = 0
+            for line in filelike.getvalue().splitlines():
+                sublines = [line[i:i+25] for i in range(0, len(line), 25)]
+                for subline in sublines:
+                    manager.display.text(subline, 0, 10 + linecount * 10)
+                    linecount += 1
+            manager.display.show()
+        except Exception as display_error:
+            launch_logger.exception(display_error, f"Failed to display error on badge: {display_error}")
     finally:
         # Release the lock when done
         manager.fg_app_lock.release()
@@ -119,11 +139,12 @@ class AppManager:
     The AppManager class is responsible for managing the apps on the badge.
     It handles app registration, loading, and execution.
     """
-    def __init__(self, buttons) -> None:
+    def __init__(self, buttons: BadgeButtons, display: BadgeDisplay) -> None:
         self.logger = logging.getLogger("AppManager")
         self.logger.setLevel(logging.DEBUG)
 
         self.buttons = buttons
+        self.display = display
 
         self.selected_app: Optional[AppRepr] = None  # The currently selected app, if any
         self.fg_app_running: bool = False  # Whether an app should currently be running

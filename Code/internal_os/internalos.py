@@ -19,19 +19,6 @@ logging.basicConfig(level=logging.DEBUG)
 import micropython
 micropython.alloc_emergency_exception_buf(100)
 
-# XXX: temp function to launch a test app
-# will be removed when the app manager is implemented
-async def launch_test_app(manager: AppManager) -> None:
-    """
-    Launch a test app for debugging purposes.
-    """
-    await asyncio.sleep(3)
-    hello_world_app = manager.get_app_by_path('/apps/hello-world')
-    if not hello_world_app:
-        manager.logger.error("Hello World app not found. Cannot launch test app.")
-        return
-    await manager.launch_app(hello_world_app)  # Launch the first registered app
-
 class InternalOS:
     """
     The class that manages the badge. It runs across two cores. The main core manages background tasks and runs with asyncio. The second core runs the app thread (synchronously).
@@ -70,14 +57,14 @@ class InternalOS:
         # software
         self.contacts = ContactsManager()
         self.notifs = NotifManager()
-        self.apps = AppManager(self.buttons)
+        self.apps = AppManager(self.buttons, self.display)
 
 
         # Step 2:
         asyncio.create_task(self.apps.scan_forever(interval=15)) # TODO: lower this interval in prod?
         asyncio.create_task(self.apps.home_button_watcher())
         asyncio.create_task(self.display.idle_when_inactive())
-        asyncio.create_task(launch_test_app(self.apps)) # TODO: remove this when the app manager is implemented
+        asyncio.create_task(self.launch_home_screen()) # TODO: remove this when the app manager is implemented
 
         # Step 3:
         asyncio.run(self.run_async())
@@ -89,7 +76,18 @@ class InternalOS:
         while True:
             await asyncio.sleep(1)
 
-        
+    async def launch_home_screen(self):
+        """
+        Launches the home screen app.
+        This is the app that is shown when the badge is started.
+        """
+        await asyncio.sleep(1)  # Give time for the display to initialize
+        home_app = self.apps.get_app_by_path('/apps/home-screen')
+        if not home_app:
+            self.apps.logger.error("Home app not found. Cannot launch home screen.")
+            return
+        await self.apps.launch_app(home_app)
+
     def get_badge_id(self) -> str:
         """
         Returns the badge ID as a hex string.
