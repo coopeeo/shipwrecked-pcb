@@ -1,25 +1,21 @@
-import React from 'react';
+import React, { use, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import ConnectionSettings from './components/ConnectionSettings';
+import { MicroPythonProvider } from './MicroPythonContext';
+import BadgeConfigurator from './components/BadgeConfigurator';
 
 function App() {
+  useEffect(() => {
+    document.title = 'Shipwrecked PCB flasher';
+  }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <MicroPythonProvider>
+      <div className="App">
+        <ConnectionSettings />
+        <BadgeConfigurator />
+      </div>
+    </MicroPythonProvider>
   );
 }
 
