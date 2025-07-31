@@ -50,7 +50,7 @@ class BadgeDisplay:
     TODO: if app is not in fullscreen mode, give it a smaller framebuffer and blit it over the main framebuffer
     """
     def __init__(self):
-        IS_REAL_BADGE = True  # Set to False for testing on a breadboarded version
+        IS_REAL_BADGE = False  # Set to False for testing on a breadboarded version
         self.logger = logging.getLogger("BadgeDisplay")
         self.logger.setLevel(logging.INFO)
         self.logger.info(f"Initializing BadgeDisplay ({'Real Badge' if IS_REAL_BADGE else 'Breadboarded Badge'})")
