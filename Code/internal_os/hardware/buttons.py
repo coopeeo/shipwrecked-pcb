@@ -1,4 +1,4 @@
-from machine import I2C, Pin, DEEPSLEEP, IDLE
+from machine import I2C, Pin
 
 try:
     from typing import List
