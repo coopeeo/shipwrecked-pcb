@@ -30,14 +30,14 @@ class BadgeButtons:
         self.i2c = I2C(0, scl=Pin(1), sda=Pin(0))
 
         # initialize the PCA9555 I/O expander
-        self.i2c.writeto_mem(ADDRESS, CONFIG_PORT_0, [0xff]) # set the bottom 8 pins as inputs
-        self.i2c.writeto_mem(ADDRESS, CONFIG_PORT_1, [0xff]) # set the top 8 pins as inputs
+        self.i2c.writeto_mem(ADDRESS, CONFIG_PORT_0, bytearray([0xff])) # set the bottom 8 pins as inputs
+        self.i2c.writeto_mem(ADDRESS, CONFIG_PORT_1, bytearray([0xff])) # set the top 8 pins as inputs
 
         # initialize internal state
         self.button_states = [False] * 16  # 16 buttons, all initially not pressed
 
         # set up the interrupt handler
-        self.interrupt_pin.irq(trigger=Pin.IRQ_FALLING, handler=self._update_button_states, wake=DEEPSLEEP | IDLE)
+        self.interrupt_pin.irq(trigger=Pin.IRQ_FALLING, handler=self._update_button_states)
 
     def _read_raw_inputs(self) -> bytes:
         """

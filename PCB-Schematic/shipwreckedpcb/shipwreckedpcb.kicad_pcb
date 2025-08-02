@@ -16931,13 +16931,13 @@
 		(embedded_fonts no)
 		(model "${KICAD9_3DMODEL_DIR}/Battery.3dshapes/BatteryHolder_Keystone_2462_2xAA.wrl"
 			(offset
-				(xyz 0 0 0)
+				(xyz 48.5 -33.5 0)
 			)
 			(scale
 				(xyz 1 1 1)
 			)
 			(rotate
-				(xyz 0 0 0)
+				(xyz -0 -0 -90)
 			)
 		)
 	)

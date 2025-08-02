@@ -21,7 +21,7 @@ led.duty_u16(10_000)  # Turn on LED
 utime.sleep(1)  # Wait for 1 second
 led.duty_u16(0)  # Turn off LED
 
-""" print("---- Testing display ----")
+print("---- Testing display ----")
 
 from einkdriver import EPD
 disp_cs = Pin(24, Pin.OUT)
@@ -35,11 +35,12 @@ display.init()
 
 print("Displaying base image...")
 display.fill(1)  # Fill with white
-display.text("Shipwrecked Badge Self-test", 10, 10, 0)
+display.text("ligma", 10, 10, 0)
 display.text("Press any button on the badge", 10, 30, 0)
 display.text(f"Badge ID: {unique_id().hex()[-4:]}", 10, 50, 0) 
 display.display()
 display.sleep()
+utime.sleep(5)  # Allow time for display to update
 
 print("---- Testing buttons ----")
 ADDRESS: int = 0x20  # I2C address of PCA9555
@@ -78,7 +79,7 @@ def tone(frequency, duration):
     utime.sleep(duration)
     buzzer.duty_u16(0)  # Turn off buzzer
 
-buzzer = PWM(Pin(21))
+buzzer = PWM(Pin(28))
 # simple melody
 tone(523, 0.5) # C5
 utime.sleep(0.1)
@@ -91,18 +92,5 @@ utime.sleep(0.7)
 tone(493, 0.5) # B4
 utime.sleep(0.1)
 tone(523, 0.5) # C5
- """
-
-print("---- Testing radio ----")
-from sx1262 import SX1262, STDBY_RC
-radio_cs = Pin(21, Pin.OUT, value=1)
-radio_rst = Pin(23, Pin.OUT, value=1)
-radio_busy = Pin(22, Pin.IN)
-radio_dio1 = Pin(17, Pin.IN)
-
-radio = SX1262(spi, radio_cs, radio_busy, radio_dio1, radio_rst)
-radio.reset()
-radio.standby(STDBY_RC)  # Set to standby mode
-# TODO: get radio part ID
 
 print("--- Test completed ---")

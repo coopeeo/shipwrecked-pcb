@@ -144,7 +144,7 @@ nice_fonts = {
     32: MicroFont("fonts/victor_B_32.mfnt"),
     42: MicroFont("fonts/victor_B_42.mfnt"),
     54: MicroFont("fonts/victor_B_54.mfnt"),
-    70: MicroFont("fonts/victor_B_70.mfnt"),
+    68: MicroFont("fonts/victor_B_68.mfnt"),
 }
 
 def nice_text(text: str, x: int, y: int, font: Union[int, MicroFont] = 18, color: int = 0, *, rot: int = 0, x_spacing: int = 0, y_spacing: int = 0) -> None:

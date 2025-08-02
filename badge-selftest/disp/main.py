@@ -13,7 +13,7 @@ spi_rx=machine.Pin(20)
 spi=machine.SPI(0,baudrate=10000000,sck=spi_sck, mosi=spi_tx, miso=spi_rx) #10Mhz
 
 #LED
-led_onboard = machine.Pin(25, machine.Pin.OUT)
+led_onboard = machine.Pin(16, machine.Pin.OUT)
 #PICTURE
 Num= [
 #0
@@ -1206,6 +1206,8 @@ def EPD_Dis_Part_myself(x_startA,y_startA,datasA,
  
 #Main function part
 while True:    
+    #utime.sleep(7) #delay 3s
+    print('now!')
     #Picture
 	#Full screen refresh
     EPD_HW_Init() #Electronic paper initialization
@@ -1240,6 +1242,7 @@ while True:
     EPD_DeepSleep()#EPD_sleep,Sleep instruction is necessary, please do not delete!!!
     utime.sleep(1) #delay 1s
     while 1: 
+        print('WHY WONT IT WORK')
         led_onboard.toggle()
         utime.sleep(1) #delay 1s
 
