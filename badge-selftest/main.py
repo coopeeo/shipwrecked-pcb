@@ -35,7 +35,7 @@ display.init()
 
 print("Displaying base image...")
 display.fill(1)  # Fill with white
-display.text("ligma", 10, 10, 0)
+display.text("badge self-test", 10, 10, 0)
 display.text("Press any button on the badge", 10, 30, 0)
 display.text(f"Badge ID: {unique_id().hex()[-4:]}", 10, 50, 0) 
 display.display()
