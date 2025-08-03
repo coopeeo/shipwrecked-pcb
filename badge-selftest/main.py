@@ -18,8 +18,7 @@ led = PWM(Pin(16))
 led.freq(5000)
 
 led.duty_u16(10_000)  # Turn on LED
-utime.sleep(1)  # Wait for 1 second
-led.duty_u16(0)  # Turn off LED
+utime.sleep(3)  # Wait for 1 second
 
 print("---- Testing display ----")
 
@@ -92,5 +91,7 @@ utime.sleep(0.7)
 tone(493, 0.5) # B4
 utime.sleep(0.1)
 tone(523, 0.5) # C5
+
+led.duty_u16(0)  # Turn off LED
 
 print("--- Test completed ---")
