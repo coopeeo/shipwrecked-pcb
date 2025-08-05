@@ -1,0 +1,11 @@
+{
+    "displayName": "messenger",
+    "logoPath": "messenger.pbm",
+    "fullScreen": "false",
+    "suppressNotifs": "false",
+    "permissions": ["notifications:write", "rawHardware:write", "radio:write", "uart:write", "contacts:write"],
+    "radioSettings": {
+        "onPacketWhenNotActive": "wake"
+    },
+    "appNumber": 3
+}

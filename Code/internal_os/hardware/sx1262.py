@@ -1,204 +1,267 @@
+from _sx126x import *
+from sx126x import SX126X
 
-"""
-MicroPython driver for the Semtech SX1262 LoRa transceiver.
-"""
+_SX126X_PA_CONFIG_SX1262 = const(0x00)
 
-from machine import Pin, SPI
-import utime
+class SX1262(SX126X):
+    TX_DONE = SX126X_IRQ_TX_DONE
+    RX_DONE = SX126X_IRQ_RX_DONE
+    ADDR_FILT_OFF = SX126X_GFSK_ADDRESS_FILT_OFF
+    ADDR_FILT_NODE = SX126X_GFSK_ADDRESS_FILT_NODE
+    ADDR_FILT_NODE_BROAD = SX126X_GFSK_ADDRESS_FILT_NODE_BROADCAST
+    PREAMBLE_DETECT_OFF = SX126X_GFSK_PREAMBLE_DETECT_OFF
+    PREAMBLE_DETECT_8 = SX126X_GFSK_PREAMBLE_DETECT_8
+    PREAMBLE_DETECT_16 = SX126X_GFSK_PREAMBLE_DETECT_16
+    PREAMBLE_DETECT_24 = SX126X_GFSK_PREAMBLE_DETECT_24
+    PREAMBLE_DETECT_32 = SX126X_GFSK_PREAMBLE_DETECT_32
+    STATUS = ERROR
 
-# SX1262 commands
-SET_SLEEP = 0x84
-SET_STANDBY = 0x80
-SET_FS = 0xC1
-SET_TX = 0x83
-SET_RX = 0x82
-SET_CAD = 0xC5
-SET_LORA_SYNC_WORD = 0x74
-SET_PACKET_TYPE = 0x8A
-SET_RF_FREQUENCY = 0x86
-SET_PA_CONFIG = 0x95
-SET_TX_PARAMS = 0x8E
-SET_BUFFER_BASE_ADDRESS = 0x8F
-SET_LORA_PACKET_PARAMS = 0x8C
-SET_DIO_IRQ_PARAMS = 0x8D
-GET_IRQ_STATUS = 0x12
-CLEAR_IRQ_STATUS = 0x02
-GET_PACKET_STATUS = 0x14
-GET_RX_BUFFER_STATUS = 0x13
-GET_STATUS = 0xC0
-WRITE_REGISTER = 0x0D
-READ_REGISTER = 0x1D
-WRITE_BUFFER = 0x0E
-READ_BUFFER = 0x1E
+    def __init__(self, spi_bus, clk, mosi, miso, cs, irq, rst, gpio):
+        super().__init__(spi_bus, clk, mosi, miso, cs, irq, rst, gpio)
+        self._callbackFunction = self._dummyFunction
 
-# Packet types
-PACKET_TYPE_LORA = 0x01
-PACKET_TYPE_GFSK = 0x00
+    def begin(self, freq=434.0, bw=125.0, sf=9, cr=7, syncWord=SX126X_SYNC_WORD_PRIVATE,
+              power=14, currentLimit=60.0, preambleLength=8, implicit=False, implicitLen=0xFF,
+              crcOn=True, txIq=False, rxIq=False, tcxoVoltage=1.6, useRegulatorLDO=False,
+              blocking=True):
+        state = super().begin(bw, sf, cr, syncWord, currentLimit, preambleLength, tcxoVoltage, useRegulatorLDO, txIq, rxIq)
+        ASSERT(state)
 
-# Standby modes
-STDBY_RC = 0x00
-STDBY_XOSC = 0x01
+        if not implicit:
+            state = super().explicitHeader()
+        else:
+            state = super().implicitHeader(implicitLen)
+        ASSERT(state)
 
-# Ramp times
-RADIO_RAMP_10U = 0x00
-RADIO_RAMP_20U = 0x01
-RADIO_RAMP_40U = 0x02
-RADIO_RAMP_80U = 0x03
-RADIO_RAMP_200U = 0x04
-RADIO_RAMP_800U = 0x05
-RADIO_RAMP_1700U = 0x06
-RADIO_RAMP_3400U = 0x07
+        state = super().setCRC(crcOn)
+        ASSERT(state)
 
-# Spreading factors
-LORA_SF5 = 0x05
-LORA_SF6 = 0x06
-LORA_SF7 = 0x07
-LORA_SF8 = 0x08
-LORA_SF9 = 0x09
-LORA_SF10 = 0x0A
-LORA_SF11 = 0x0B
-LORA_SF12 = 0x0C
+        state = self.setFrequency(freq)
+        ASSERT(state)
 
-# Bandwidths
-LORA_BW_7 = 0x00
-LORA_BW_10 = 0x08
-LORA_BW_15 = 0x01
-LORA_BW_20 = 0x09
-LORA_BW_31 = 0x02
-LORA_BW_41 = 0x0A
-LORA_BW_62 = 0x03
-LORA_BW_125 = 0x04
-LORA_BW_250 = 0x05
-LORA_BW_500 = 0x06
+        state = self.setOutputPower(power)
+        ASSERT(state)
 
-# Coding rates
-LORA_CR_4_5 = 0x01
-LORA_CR_4_6 = 0x02
-LORA_CR_4_7 = 0x03
-LORA_CR_4_8 = 0x04
+        state = super().fixPaClamping()
+        ASSERT(state)
 
-# IRQ flags
-IRQ_TX_DONE = 1 << 0
-IRQ_RX_DONE = 1 << 1
-IRQ_PREAMBLE_DETECTED = 1 << 2
-IRQ_SYNC_WORD_VALID = 1 << 3
-IRQ_HEADER_VALID = 1 << 4
-IRQ_HEADER_ERR = 1 << 5
-IRQ_CRC_ERR = 1 << 6
-IRQ_CAD_DONE = 1 << 7
-IRQ_CAD_DETECTED = 1 << 8
-IRQ_TIMEOUT = 1 << 9
+        state = self.setBlockingCallback(blocking)
 
-class SX1262:
-    def __init__(self, spi, cs, busy, dio1, rst):
-        self.spi = spi
-        self.cs = cs
-        self.busy = busy
-        self.dio1 = dio1
-        self.rst = rst
+        return state
 
-        self.cs.init(self.cs.OUT, value=1)
-        self.rst.init(self.rst.OUT, value=1)
-        self.busy.init(self.busy.IN)
-        self.dio1.init(self.dio1.IN)
+    def beginFSK(self, freq=434.0, br=48.0, freqDev=50.0, rxBw=156.2, power=14, currentLimit=60.0,
+                 preambleLength=16, dataShaping=0.5, syncWord=[0x2D, 0x01], syncBitsLength=16,
+                 addrFilter=SX126X_GFSK_ADDRESS_FILT_OFF, addr=0x00, crcLength=2, crcInitial=0x1D0F, crcPolynomial=0x1021,
+                 crcInverted=True, whiteningOn=True, whiteningInitial=0x0100,
+                 fixedPacketLength=False, packetLength=0xFF, preambleDetectorLength=SX126X_GFSK_PREAMBLE_DETECT_16,
+                 tcxoVoltage=1.6, useRegulatorLDO=False,
+                 blocking=True):
+        state = super().beginFSK(br, freqDev, rxBw, currentLimit, preambleLength, dataShaping, preambleDetectorLength, tcxoVoltage, useRegulatorLDO)
+        ASSERT(state)
 
-        self.reset()
-        self.standby(STDBY_RC)
-        self.set_packet_type(PACKET_TYPE_LORA)
+        state = super().setSyncBits(syncWord, syncBitsLength)
+        ASSERT(state)
 
-    def _read(self, command, length):
-        self.cs.value(0)
-        self.spi.write(bytearray([command]))
-        data = self.spi.read(length)
-        self.cs.value(1)
-        return data
+        if addrFilter == SX126X_GFSK_ADDRESS_FILT_OFF:
+            state = super().disableAddressFiltering()
+        elif addrFilter == SX126X_GFSK_ADDRESS_FILT_NODE:
+            state = super().setNodeAddress(addr)
+        elif addrFilter == SX126X_GFSK_ADDRESS_FILT_NODE_BROADCAST:
+            state = super().setBroadcastAddress(addr)
+        else:
+            state = ERR_UNKNOWN
+        ASSERT(state)
 
-    def _write(self, command, data):
-        self.cs.value(0)
-        self.spi.write(bytearray([command]) + data)
-        self.cs.value(1)
+        state = super().setCRC(crcLength, crcInitial, crcPolynomial, crcInverted)
+        ASSERT(state)
 
-    def _wait_on_busy(self):
-        while self.busy.value() == 1:
-            utime.sleep_ms(1)
+        state = super().setWhitening(whiteningOn, whiteningInitial)
+        ASSERT(state)
 
-    def reset(self):
-        self.rst.value(0)
-        utime.sleep_ms(10)
-        self.rst.value(1)
-        utime.sleep_ms(10)
-        self._wait_on_busy()
+        if fixedPacketLength:
+            state = super().fixedPacketLengthMode(packetLength)
+        else:
+            state = super().variablePacketLengthMode(packetLength)
+        ASSERT(state)
 
-    def standby(self, mode):
-        self._write(SET_STANDBY, bytearray([mode]))
+        state = self.setFrequency(freq)
+        ASSERT(state)
 
-    def sleep(self):
-        self._write(SET_SLEEP, bytearray([0x00]))
+        state = self.setOutputPower(power)
+        ASSERT(state)
 
-    def set_packet_type(self, type):
-        self._write(SET_PACKET_TYPE, bytearray([type]))
+        state = super().fixPaClamping()
+        ASSERT(state)
 
-    def set_frequency(self, freq):
-        freq_val = int((freq * (2**25)) / 32000000)
-        self._write(SET_RF_FREQUENCY, freq_val.to_bytes(4, 'big'))
+        state = self.setBlockingCallback(blocking)
 
-    def set_tx_params(self, power, ramp_time):
-        self._write(SET_TX_PARAMS, bytearray([power, ramp_time]))
+        return state
 
-    def set_buffer_base_address(self, tx_base, rx_base):
-        self._write(SET_BUFFER_BASE_ADDRESS, bytearray([tx_base, rx_base]))
+    def setFrequency(self, freq, calibrate=True):
+        if freq < 150.0 or freq > 960.0:
+            return ERR_INVALID_FREQUENCY
 
-    def set_lora_packet_params(self, header_type, spreading_factor, bandwidth, coding_rate, preamble_length, crc_type):
-        self._write(SET_LORA_PACKET_PARAMS, bytearray([
-            preamble_length >> 8, preamble_length & 0xFF,
-            header_type,
-            spreading_factor,
-            bandwidth,
-            coding_rate,
-            crc_type
-        ]))
+        state = ERR_NONE
 
-    def set_dio_irq_params(self, irq_mask, dio1_mask, dio2_mask, dio3_mask):
-        self._write(SET_DIO_IRQ_PARAMS, bytearray([
-            irq_mask >> 8, irq_mask & 0xFF,
-            dio1_mask >> 8, dio1_mask & 0xFF,
-            dio2_mask >> 8, dio2_mask & 0xFF,
-            dio3_mask >> 8, dio3_mask & 0xFF,
-        ]))
+        if calibrate:
+            data = bytearray(2)
+            if freq > 900.0:
+                data[0] = SX126X_CAL_IMG_902_MHZ_1
+                data[1] = SX126X_CAL_IMG_902_MHZ_2
+            elif freq > 850.0:
+                data[0] = SX126X_CAL_IMG_863_MHZ_1
+                data[1] = SX126X_CAL_IMG_863_MHZ_2
+            elif freq > 770.0:
+                data[0] = SX126X_CAL_IMG_779_MHZ_1
+                data[1] = SX126X_CAL_IMG_779_MHZ_2
+            elif freq > 460.0:
+                data[0] = SX126X_CAL_IMG_470_MHZ_1
+                data[1] = SX126X_CAL_IMG_470_MHZ_2
+            else:
+                data[0] = SX126X_CAL_IMG_430_MHZ_1
+                data[1] = SX126X_CAL_IMG_430_MHZ_2
+            state = super().calibrateImage(data)
+            ASSERT(state)
 
-    def get_irq_status(self):
-        return int.from_bytes(self._read(GET_IRQ_STATUS, 2), 'big')
+        return super().setFrequencyRaw(freq)
 
-    def clear_irq_status(self, mask):
-        self._write(CLEAR_IRQ_STATUS, bytearray([mask >> 8, mask & 0xFF]))
+    def setOutputPower(self, power):
+        if not ((power >= -9) and (power <= 22)):
+            return ERR_INVALID_OUTPUT_POWER
+
+        ocp = bytearray(1)
+        ocp_mv = memoryview(ocp)
+        state = super().readRegister(SX126X_REG_OCP_CONFIGURATION, ocp_mv, 1)
+        ASSERT(state)
+
+        state = super().setPaConfig(0x04, _SX126X_PA_CONFIG_SX1262)
+        ASSERT(state)
+
+        state = super().setTxParams(power)
+        ASSERT(state)
+
+        return super().writeRegister(SX126X_REG_OCP_CONFIGURATION, ocp, 1)
+
+    def setTxIq(self, txIq):
+        self._txIq = txIq
+
+    def setRxIq(self, rxIq):
+        self._rxIq = rxIq
+        if not self.blocking:
+            ASSERT(super().startReceive())
+
+    def setPreambleDetectorLength(self, preambleDetectorLength):
+        self._preambleDetectorLength = preambleDetectorLength
+        if not self.blocking:
+            ASSERT(super().startReceive())
+
+    def setBlockingCallback(self, blocking, callback=None):
+        self.blocking = blocking
+        if not self.blocking:
+            state = super().startReceive()
+            ASSERT(state)
+            if callback != None:
+                self._callbackFunction = callback
+                super().setDio1Action(self._onIRQ)
+            else:
+                self._callbackFunction = self._dummyFunction
+                super().clearDio1Action()
+            return state
+        else:
+            state = super().standby()
+            ASSERT(state)
+            self._callbackFunction = self._dummyFunction
+            super().clearDio1Action()
+            return state
+
+    def recv(self, len=0, timeout_en=False, timeout_ms=0):
+        if not self.blocking:
+            return self._readData(len)
+        else:
+            return self._receive(len, timeout_en, timeout_ms)
 
     def send(self, data):
-        self.standby(STDBY_RC)
-        self.set_buffer_base_address(0, 0)
-        self._write(WRITE_BUFFER, bytearray([0]) + data)
-        self.set_lora_packet_params(0x00, LORA_SF7, LORA_BW_125, LORA_CR_4_5, 8, 0x01)
-        self.set_dio_irq_params(IRQ_TX_DONE, IRQ_TX_DONE, 0, 0)
-        self._write(SET_TX, bytearray([0, 0, 0])) # Timeout = 0 (no timeout)
+        if not self.blocking:
+            return self._startTransmit(data)
+        else:
+            return self._transmit(data)
 
-    def recv(self, timeout=0):
-        self.standby(STDBY_RC)
-        self.set_buffer_base_address(0, 0)
-        self.set_lora_packet_params(0x00, LORA_SF7, LORA_BW_125, LORA_CR_4_5, 8, 0x01)
-        self.set_dio_irq_params(IRQ_RX_DONE | IRQ_TIMEOUT, IRQ_RX_DONE | IRQ_TIMEOUT, 0, 0)
-        timeout_val = int(timeout * 1000 / 15.625)
-        self._write(SET_RX, bytearray([timeout_val >> 16, (timeout_val >> 8) & 0xFF, timeout_val & 0xFF]))
+    def _events(self):
+        return super().getIrqStatus()
 
-        while True:
-            irq = self.get_irq_status()
-            if irq & IRQ_RX_DONE:
-                self.clear_irq_status(IRQ_RX_DONE)
-                rx_status = self._read(GET_RX_BUFFER_STATUS, 2)
-                length = rx_status[0]
-                offset = rx_status[1]
-                self._write(WRITE_REGISTER, bytearray([0x01, 0x0D, offset])) # Set buffer pointer
-                payload = self._read(READ_BUFFER, length)
-                return payload
-            if irq & IRQ_TIMEOUT:
-                self.clear_irq_status(IRQ_TIMEOUT)
-                return None
-            utime.sleep_ms(10)
+    def _receive(self, len_=0, timeout_en=False, timeout_ms=0):
+        state = ERR_NONE
+        
+        length = len_
+        
+        if len_ == 0:
+            length = SX126X_MAX_PACKET_LENGTH
+
+        data = bytearray(length)
+        data_mv = memoryview(data)
+
+        try:
+            state = super().receive(data_mv, length, timeout_en, timeout_ms)
+        except AssertionError as e:
+            state = list(ERROR.keys())[list(ERROR.values()).index(str(e))]
+
+        if state == ERR_NONE or state == ERR_CRC_MISMATCH:
+            if len_ == 0:
+                length = super().getPacketLength(False)
+                data = data[:length]
+
+        else:
+            return b'', state
+
+        return  bytes(data), state
+
+    def _transmit(self, data):
+        if isinstance(data, bytes) or isinstance(data, bytearray):
+            pass
+        else:
+            return 0, ERR_INVALID_PACKET_TYPE
+
+        state = super().transmit(data, len(data))
+        return len(data), state
+
+    def _readData(self, len_=0):
+        state = ERR_NONE
+
+        length = super().getPacketLength()
+
+        if len_ < length and len_ != 0:
+            length = len_
+
+        data = bytearray(length)
+        data_mv = memoryview(data)
+
+        try:
+            state = super().readData(data_mv, length)
+        except AssertionError as e:
+            state = list(ERROR.keys())[list(ERROR.values()).index(str(e))]
+
+        ASSERT(super().startReceive())
+
+        if state == ERR_NONE or state == ERR_CRC_MISMATCH:
+            return bytes(data), state
+
+        else:
+            return b'', state
+
+    def _startTransmit(self, data):
+        if isinstance(data, bytes) or isinstance(data, bytearray):
+            pass
+        else:
+            return 0, ERR_INVALID_PACKET_TYPE
+
+        state = super().startTransmit(data, len(data))
+        return len(data), state
+
+    def _dummyFunction(self, *args):
+        pass
+
+    def _onIRQ(self, callback):
+        events = self._events()
+        if events & SX126X_IRQ_TX_DONE:
+            super().startReceive()
+        self._callbackFunction(events)
