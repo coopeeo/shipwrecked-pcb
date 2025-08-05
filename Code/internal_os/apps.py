@@ -9,6 +9,7 @@ from internal_os.baseapp import BaseApp
 from internal_os.hardware.display import BadgeDisplay
 from internal_os.hardware.buttons import BadgeButtons
 from io import StringIO
+from internal_os.hardware.radio import Packet
 import logging
 import os
 import json
@@ -27,7 +28,7 @@ class AppRepr:
     suppress_notifs: bool
     permissions: List[str]
     radio_settings: Dict
-    app_number: str
+    app_number: int
 
     @classmethod
     def from_json(cls, path: str, json_str: str) -> 'AppRepr':
@@ -45,7 +46,10 @@ class AppRepr:
         app_repr.suppress_notifs = json_data.get("suppressNotifs", False)
         app_repr.permissions = json_data.get("permissions", [])
         app_repr.radio_settings = json_data.get("radioSettings", {})
-        app_repr.app_number = json_data.get("appNumber", "")
+        try:
+            app_repr.app_number = int(json_data.get("appNumber", ""))
+        except ValueError:
+            raise ValueError(f"Invalid appNumber in manifest for {app_repr.display_name}. It must be an integer.")
         return app_repr
 
 AppContext: TypeAlias = int
@@ -80,6 +84,24 @@ async def acquire_lock(lock: _thread.LockType, timeout: Optional[float] = None):
                     raise TimeoutError(f"Failed to acquire lock within {timeout} seconds.")
             await asyncio.sleep(0.1)  # Yield control to the event loop
 
+def load_app(launch_logger: logging.Logger, app_repr: AppRepr) -> None:
+    """
+    import an app and make sure it's well-formed.
+    """
+    applib = __import__(app_repr.app_path + '.main', globals(), locals(), ['App'])
+    launch_logger.debug(f"Imported app module: {app_repr.app_path}.main")
+    # check that the app has an App class, and that that class descends from BaseApp
+    if not hasattr(applib, 'App'):
+        raise ImportError(f"App {app_repr.display_name} does not define an class named `App`.")
+    app_class = applib.App
+    if BaseApp not in app_class.__bases__: # cannot use issubclass because the reexport from badge changes its identity
+        raise TypeError(f"App {app_repr.display_name} does not inherit from `badge.BaseApp`.")
+    app_logger = logging.getLogger(app_repr.display_name)
+    app_logger.setLevel(logging.DEBUG)
+    app = app_class()
+    app.logger = app_logger
+    return app
+
 def app_thread(app_repr: AppRepr, manager: 'AppManager') -> None:
     """
     The thread that runs the app. It should run synchronously.
@@ -94,22 +116,11 @@ def app_thread(app_repr: AppRepr, manager: 'AppManager') -> None:
     manager.fg_app_lock.acquire(1) # 1 means block until we get it
     launch_logger.debug(f"Acquired app lock")
     try:
-        applib = __import__(app_repr.app_path + '.main', globals(), locals(), ['App'])
-        launch_logger.debug(f"Imported app module: {app_repr.app_path}.main")
-        # check that the app has an App class, and that that class descends from BaseApp
-        if not hasattr(applib, 'App'):
-            raise ImportError(f"App {app_repr.display_name} does not define an class named `App`.")
-        app_class = applib.App
-        if BaseApp not in app_class.__bases__: # cannot use issubclass because the reexport from badge changes its identity
-            raise TypeError(f"App {app_repr.display_name} does not inherit from `badge.BaseApp`.")
-        app_logger = logging.getLogger(app_repr.display_name)
-        app_logger.setLevel(logging.DEBUG)
-        app = app_class()
-        app.logger = app_logger
-
-        app.on_open()  # Call the on_open method
+        app = load_app(launch_logger, app_repr)
+        manager.selected_app_instance = app
+        app.on_open()  # pyright: ignore[reportAttributeAccessIssue] # on_open is defined in BaseApp which is confirmed in load_app
         while manager.fg_app_running:
-            app.loop()
+            app.loop() # pyright: ignore[reportAttributeAccessIssue] # loop is defined in BaseApp which is confirmed in load_app
         launch_logger.info(f"App {app_repr.display_name} has finished running.")
 
     except Exception as e:
@@ -147,6 +158,7 @@ class AppManager:
         self.display = display
 
         self.selected_app: Optional[AppRepr] = None  # The currently selected app, if any
+        self.selected_app_instance: Optional[BaseApp] = None  # The currently selected app class, if any
         self.fg_app_running: bool = False  # Whether an app should currently be running
         self.fg_app_lock: _thread.LockType = _thread.allocate_lock()
 
@@ -185,8 +197,8 @@ class AppManager:
                         # TODO: add addl checks for things like paths existing, etc.
                 except OSError as e:
                     self.logger.error(f"Failed to read manifest for app in {app_dir}. Skipping. Error: {e}")
-                except json.JSONDecodeError as e:
-                    self.logger.error(f"Invalid JSON in manifest for app in {app_dir}. Skipping. Error: {e}")
+                # except json.JSONDecodeError as e:
+                #     self.logger.error(f"Invalid JSON in manifest for app in {app_dir}. Skipping. Error: {e}")
                 except Exception as e:
                     self.logger.error(f"Unexpected error while registering app in {app_dir}. Skipping. Error: {e}")
 
@@ -244,6 +256,41 @@ class AppManager:
             if app.app_path == app_path:
                 return app
         return None
+    
+    def dispatch_packet(self, packet: Packet) -> None:
+        """
+        Dispatch a packet to an app, waking it if necessary.
+        """
+        self.logger.debug(f"Dispatching packet to app: {packet.app_number}")
+        if self.selected_app and self.selected_app.app_number == packet.app_number:
+            self.logger.debug(f"Packet for currently running app {self.selected_app.display_name}.")
+            try:
+                self.selected_app_instance.on_packet(packet, True)
+            except Exception as e:
+                self.logger.exception(e, f"Error while handling packet in {self.selected_app.display_name}:")
+                # TODO: display error on badge?
+        else:
+            # we need to load the app and run it in the background
+            self.logger.debug(f"Packet for app {packet.app_number} not currently running. Loading it.")
+            app_repr = None
+            for app in self.registered_apps:
+                if app.app_number == packet.app_number:
+                    app_repr = app
+                    self.logger.debug(f"Found app {app_repr.display_name} for number {packet.app_number}.")
+                    break
+            if app_repr is None:
+                self.logger.error(f"App with app_number {packet.app_number} not found. Cannot dispatch packet: {packet}")
+                return
+            
+            bg_launch_logger = logging.getLogger("BackgroundAppLaunch-" + app_repr.display_name)
+            bg_launch_logger.setLevel(logging.DEBUG)
+            bg_launch_logger.info(f"Launching app {app_repr.display_name} in background for packet handling.")
+            try:
+                app = load_app(bg_launch_logger, app_repr)
+                app.on_packet(packet, False)  # Handle the packet
+                bg_launch_logger.info(f"App {app_repr.display_name} handled packet successfully.")
+            except Exception as e:
+                bg_launch_logger.exception(e, f"Error while handling packet in background app {app_repr.display_name}:")
     
     async def home_button_watcher(self) -> None:
         """

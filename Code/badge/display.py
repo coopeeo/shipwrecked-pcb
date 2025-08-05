@@ -31,7 +31,7 @@ def sleep():
     """
     if not _is_display_allowed():
         raise RuntimeError("Cannot call display functions from a backgrounded app context.")
-    internal_os.display.sleep()
+    internal_os.display.sleep_disp()
 
 def show() -> None:
     """
@@ -150,7 +150,7 @@ nice_fonts = {
 def nice_text(text: str, x: int, y: int, font: Union[int, MicroFont] = 18, color: int = 0, *, rot: int = 0, x_spacing: int = 0, y_spacing: int = 0) -> None:
     """
     Draw text using a nice font.
-    Included fonts are Victor Mono Bold in 12, 18, 32, and 70.
+    Included fonts are Victor Mono Bold in 18, 24, 32, 42, 54, and 68 point sizes.
     If these are not adequate, you can provide a MicroFont instance with your own font.
     :param text: The text to draw.
     :param x: X coordinate of the text.

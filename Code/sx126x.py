@@ -404,6 +404,7 @@ class SX126X:
           self.irq.switch_to_input()
 
     def startTransmit(self, data, len_, addr=0):
+        print("radiodebug: startTransmit", len_, data)
         if len_ > SX126X_MAX_PACKET_LENGTH:
             return ERR_PACKET_TOO_LONG
                 
@@ -432,6 +433,8 @@ class SX126X:
         else:
             return ERR_UNKNOWN
         ASSERT(state)
+
+        print("radiodebug: startTransmit after setPacketParams")
         
         state = self.setDioIrqParams(SX126X_IRQ_TX_DONE | SX126X_IRQ_TIMEOUT, SX126X_IRQ_TX_DONE)
         ASSERT(state)
@@ -444,9 +447,13 @@ class SX126X:
         
         state = self.clearIrqStatus()
         ASSERT(state)
+
+        print("radiodebug: startTransmit after clearIrqStatus")
         
         state = self.fixSensitivity()
         ASSERT(state)
+
+        print("radiodebug: startTransmit after fixSensitivity")
         
         state = self.setTx(SX126X_TX_TIMEOUT_NONE)
         ASSERT(state)
@@ -459,6 +466,7 @@ class SX126X:
           while self.gpio.value:
               yield_()
 
+        print("radiodebug: startTransmit done")
         return state
 		
     def startReceive(self, timeout=SX126X_RX_TIMEOUT_INF):
@@ -1177,15 +1185,19 @@ class SX126X:
         return self.setRfFrequency(frf)
 
     def fixSensitivity(self):
+        print("radiodebug: fixSensitivity")
         sensitivityConfig = bytearray(1)
         sensitivityConfig_mv = memoryview(sensitivityConfig)
         state = self.readRegister(SX126X_REG_SENSITIVITY_CONFIG, sensitivityConfig_mv, 1)
-        ASSERT(state)
-
+        print("radiodebug: sensitivityConfig read")
+        print(state)
+        #ASSERT(state)
+        print("radiodebug: sensitivityConfig before fix")
         if self.getPacketType() == SX126X_PACKET_TYPE_LORA and abs(self._bwKhz - 500.0) <= 0.001:
             sensitivityConfig_mv[0] &= 0xFB
         else:
             sensitivityConfig_mv[0] |= 0x04
+        print("radiodebug: sensitivityConfig after fix")
         return self.writeRegister(SX126X_REG_SENSITIVITY_CONFIG, sensitivityConfig, 1)
 
     def fixPaClamping(self):
@@ -1288,24 +1300,6 @@ class SX126X:
 
           for i in range(cmdLen):
               self.spi.write(bytes([cmd[i]]))
-
-        if implementation.name == 'circuitpython':
-          while not self.spi.try_lock():
-              pass
-          self.cs.value = False
-
-          start = ticks_ms()
-          while self.gpio.value:
-              yield_()
-              if abs(ticks_diff(start, ticks_ms())) >= timeout:
-                  self.cs.value = True
-                  self.spi.unlock()
-                  return ERR_SPI_CMD_TIMEOUT
-
-          for i in range(cmdLen):
-              self.spi.write(bytes([cmd[i]]))
-
-          in_ = bytearray(1)
 
         status = 0
 

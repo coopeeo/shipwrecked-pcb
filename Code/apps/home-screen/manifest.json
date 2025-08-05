@@ -3,5 +3,6 @@
     "logoPath": "home-icon.pbm",
     "fullScreen": "false",
     "suppressNotifs": "false",
-    "permissions": []
+    "permissions": [],
+    "appNumber": 0
 }

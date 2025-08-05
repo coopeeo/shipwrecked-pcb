@@ -48,7 +48,7 @@ class InternalOS:
         # Step 1:
         # hardware
         self.display = BadgeDisplay()
-        self.radio = BadgeRadio()
+        self.radio = BadgeRadio(self)
         self.buttons = BadgeButtons()
         self.rtc = RTC()
         self.buzzer = PWM(Pin(28, Pin.OUT))
@@ -64,7 +64,8 @@ class InternalOS:
         asyncio.create_task(self.apps.scan_forever(interval=15)) # TODO: lower this interval in prod?
         asyncio.create_task(self.apps.home_button_watcher())
         asyncio.create_task(self.display.idle_when_inactive())
-        asyncio.create_task(self.launch_home_screen()) # TODO: remove this when the app manager is implemented
+        asyncio.create_task(self.radio.manage_packets_forever())
+        asyncio.create_task(self.launch_home_screen())
 
         # Step 3:
         asyncio.run(self.run_async())
@@ -82,13 +83,13 @@ class InternalOS:
         This is the app that is shown when the badge is started.
         """
         await asyncio.sleep(1)  # Give time for the display to initialize
-        home_app = self.apps.get_app_by_path('/apps/home-screen')
+        home_app = self.apps.get_app_by_path('/apps/messenger')
         if not home_app:
             self.apps.logger.error("Home app not found. Cannot launch home screen.")
             return
         await self.apps.launch_app(home_app)
 
-    def get_badge_id(self) -> str:
+    def get_badge_id_hex(self) -> str:
         """
         Returns the badge ID as a hex string.
         The badge ID is the last 2 bytes (4 digits) of the machine.unique_id().

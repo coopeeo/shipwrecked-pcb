@@ -1,6 +1,7 @@
 """ Abstraction of the radio driver """
+import asyncio
 from machine import I2C, Pin, unique_id
-
+import time
 
 try:
     from typing import List
@@ -21,14 +22,20 @@ class Packet:
     """
     Represents a packet.
     """
-    def __init__(self, dest: bytes, app_number: bytes, data: bytes):
-        self.source = unique_id().hex()[-4:].encode()
+    def __init__(self, dest: int, app_number: int, data: bytes):
+        if not isinstance(dest, int):
+            raise TypeError("dest must be an integer")
+        if not isinstance(app_number, int):
+            raise TypeError("app_number must be an integer")
+        if not isinstance(data, bytes):
+            raise TypeError("data must be bytes")
+        self.source = int.from_bytes(unique_id()[-2:], 'big')  # source address from unique ID
         self.dest = dest
         self.app_number = app_number
         self.data = data
 
     def __repr__(self):
-        return f"Packet(source={self.source}, dest={self.dest}, app_number={self.app_number}, data={self.data})"
+        return f"Packet(source={self.source:x}, dest={self.dest:x}, app_number={self.app_number}, data={self.data})"
     
     def to_dict(self):
         """
@@ -43,9 +50,16 @@ class Packet:
 
 class BadgeRadio:
     
-    def __init__(self) -> None:
+    def __init__(self, internal_os) -> None:
+        self.internal_os = internal_os
+        self.logger = logging.getLogger("BadgeRadio")
+        self.logger.setLevel(logging.DEBUG)
+
         self._receive_queue = []  # rx queue
         self._transmit_queue = [] # tx queue
+
+        self.last_tx_time = time.ticks_ms()
+
         sx.begin(
             freq=923, bw=500.0, sf=12, cr=8, syncWord=0x12,
             power=14, currentLimit=60.0, preambleLength=8, # max power!
@@ -61,7 +75,7 @@ class BadgeRadio:
             msg, status = sx.recv()
             self._handle_packet(msg)
 
-    def send_msg(self, dest: bytes, target_app: bytes, message: bytes):
+    def _send_msg(self, dest: bytes, target_app: bytes, message: bytes):
         """
         Sends a message over LoRa.
         Takes in app ID, and optional message type. If ommited, it's an announcement.
@@ -72,14 +86,14 @@ class BadgeRadio:
         bytes 4-5: packet type
         bytes 6-254: app-specific payload """
         
-        src = unique_id().hex()[-4:]
-        src_bytes = bytes.fromhex(src)
+        src_bytes = unique_id()[-2:]
 
         msg_bytes = bytearray(6 + len(message))
         msg_bytes[0:2] = src_bytes
         msg_bytes[2:4] = dest
         msg_bytes[4:6] = target_app
         msg_bytes[6:] = message
+        self.logger.debug(f"Sending message: {msg_bytes}")
 
         sx.send(msg_bytes)
 
@@ -92,16 +106,21 @@ class BadgeRadio:
             logging.warning("Received malformed packet")
             return
 
-        src = packet[0:2]
-        dest = packet[2:4]
-        target_app = packet[4:6]
+        src = int.from_bytes(packet[0:2], 'big')
+        dest = int.from_bytes(packet[2:4], 'big')
+        target_app = int.from_bytes(packet[4:6], 'big')
         payload = packet[6:]
 
         pkt = Packet(dest, target_app, payload)
+        pkt.source = src  # set source from packet
+
+        if pkt.dest != int.from_bytes(unique_id()[-2:], 'big') and pkt.dest != 0xFFFF:
+            logging.debug(f"Packet not for this badge: {pkt.dest:x} != {int.from_bytes(unique_id()[-2:], 'big'):x} or not broadcast")
+            return
+
         self._receive_queue.append(pkt)  # add packet to the rx queue
 
-        # TODO: dispatch a radio packet
-        #internal_os.dispatch_packet(src, dest, target_app, payload)
+        # dispatching is handled in manage_packets_forever
 
     def get_packets_available(self) -> int:
         """
@@ -124,13 +143,41 @@ class BadgeRadio:
         """
         return len(self._transmit_queue)
 
-    def get_time_to_next_send(self) -> int:
+    def get_time_to_next_send(self) -> float:
         """
         Returns the time in seconds until the next packet can be sent.
         """
+        current_time = time.ticks_ms()
+        elapsed_time = time.ticks_diff(current_time, self.last_tx_time)
+        ms_per_packet = 1500
+        return max(0, (ms_per_packet - elapsed_time) / 1000.0)
+    
+    def add_to_tx_queue(self, dest: int, app_number: int, data: bytes):
+        """
+        Adds a packet to the transmit queue.
+        """
+        pkt = Packet(dest, app_number, data)
+        self._transmit_queue.append(pkt)
+        logging.info(f"Added packet to transmit queue: {pkt}")
 
-        # TODO: placeholder
-        if not self._transmit_queue:
-            return 0
-        # assuming a rate limit of 1 packet per second
-        return 1
+    async def manage_packets_forever(self):
+        while True:
+            # manage the transmission rate and dispatch packets
+            if len(self._receive_queue) > 0:
+                packet = self.get_next_packet()
+                if packet:
+                    logging.info(f"Dispatching packet: {packet}")
+                    self.internal_os.apps.dispatch_packet(packet)        
+
+            if len(self._transmit_queue) > 0:
+                # handle sending packets
+                self.logger.debug(f"Transmit queue size: {len(self._transmit_queue)}")
+                if self.get_time_to_next_send() <= 0:
+                    pkt = self._transmit_queue.pop(0)
+                    self.logger.debug(f"Sending packet: {pkt}")
+                    self._send_msg(pkt.dest.to_bytes(2, 'big'), pkt.app_number.to_bytes(2, 'big'), pkt.data)
+                    self.logger.info(f"Sent packet: {pkt}")
+                    self.last_tx_time = time.ticks_ms()
+                    logging.info(f"Sent packet: {pkt}")
+
+            await asyncio.sleep(0.1)

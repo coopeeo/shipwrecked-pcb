@@ -14,7 +14,7 @@ def my_contact() -> Optional[Contact]:
     Get the contact information for the current user.
     This is based on the badge ID.
     """
-    badge_id = internal_os.get_badge_id()
+    badge_id = internal_os.get_badge_id_hex()
     return internal_os.contacts.get_contact_by_badge_id(badge_id)
 
 def get_contact_by_badge_id(badge_id: str) -> Optional[Contact]:

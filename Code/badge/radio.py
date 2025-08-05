@@ -17,20 +17,21 @@ def read_packet() -> Packet | None:
     """
     return internal_os.radio.get_next_packet()
 
-def send_packet(packet: Packet) -> None:
+def send_packet(dest: int, data: bytes) -> None:
     """
     Sends a packet over the radio.
-    Send a packet. To avoid flooding the radio bandwidth, this method can only send packets at a rate of 1 per second. Any additional packets are added to a queue.
+    Send a packet. To avoid flooding the radio bandwidth, this method can only send packets at a rate of 1 every 1.5 seconds. Any additional packets are added to a queue.
 
     """
 
-    if not isinstance(packet, Packet):
-        raise TypeError("packet must be an instance of Packet.")
+    # TODO: check that we're on the main thread
     selected_app = internal_os.apps.selected_app
     if selected_app is None:
         raise AttributeError("no app is currently selected; cannot retrieve app_number.")
     app_number = selected_app.app_number
-    internal_os.radio.send_msg(packet.dest, int(app_number).to_bytes(2), packet.data)
+    if any([p.app_number == app_number for p in internal_os.radio._transmit_queue]):
+        raise RuntimeError(f"App {selected_app.display_name} already has a packet in the transmit queue. Please wait until it is sent before sending another packet. (See get_send_queue_size())")
+    internal_os.radio.add_to_tx_queue(dest, app_number, data)
 
 def get_send_queue_size() -> int:
     """
@@ -38,7 +39,7 @@ def get_send_queue_size() -> int:
     """
     return internal_os.radio.get_send_queue_size()
 
-def get_time_to_next_send() -> int:
+def get_time_to_next_send() -> float:
     """
     Returns the time in seconds until the next packet can be sent.
     """
