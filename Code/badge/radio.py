@@ -24,8 +24,7 @@ def send_packet(dest: int, data: bytes) -> None:
 
     """
 
-    # TODO: check that we're on the main thread
-    selected_app = internal_os.apps.selected_app
+    selected_app = internal_os.apps.get_current_app_repr()
     if selected_app is None:
         raise AttributeError("no app is currently selected; cannot retrieve app_number.")
     app_number = selected_app.app_number

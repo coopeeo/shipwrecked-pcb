@@ -52,11 +52,11 @@ class AppRepr:
             raise ValueError(f"Invalid appNumber in manifest for {app_repr.display_name}. It must be an integer.")
         return app_repr
 
-AppContext: TypeAlias = int
-class AppContexts:
-    ASLEEP: AppContext = 0
-    FOREGROUND: AppContext = 1
-    BACKGROUND: AppContext = 2
+    def __eq__(self, value: object) -> bool:
+        if not isinstance(value, AppRepr):
+            return NotImplemented
+        return self.app_path == value.app_path
+
 
 class TimeoutError(Exception):
     """
@@ -157,15 +157,29 @@ class AppManager:
         self.buttons = buttons
         self.display = display
 
-        self.selected_app: Optional[AppRepr] = None  # The currently selected app, if any
+        self.selected_fg_app: Optional[AppRepr] = None  # The currently selected app, if any
         self.selected_app_instance: Optional[BaseApp] = None  # The currently selected app class, if any
         self.fg_app_running: bool = False  # Whether an app should currently be running
         self.fg_app_lock: _thread.LockType = _thread.allocate_lock()
+        self.bg_app_repr: Optional[AppRepr] = None  # The background app, if any
 
         self.backgrounded_apps: List[AppRepr] = []  # Apps that are running in the background
 
         self.registered_apps: List[AppRepr] = []
         self.scan_for_apps()
+    
+    def get_current_app_repr(self) -> AppRepr | None:
+        """
+        Get the AppRepr of the app that calls this, taking into account whether it's foreground or background.
+        """
+        if _thread.get_ident() == 2:
+            # thread ident 2 = core 1 = foregrounded app
+            # we can only rely on this because of the RP2040's implementation of get_ident():
+            # https://github.com/micropython/micropython/blob/master/ports/rp2/mpthreadport.c#L123
+            return self.selected_fg_app
+        else:
+            # we're running on core 0, so it's a background app
+            return self.bg_app_repr
 
     def scan_for_apps(self) -> None:
         """
@@ -225,7 +239,7 @@ class AppManager:
         if self.fg_app_running:
             # we need to stop the currently running app first
             self.fg_app_running = False
-            self.logger.info(f"Stopping currently running app: {self.selected_app.display_name if self.selected_app else 'None'}")
+            self.logger.info(f"Stopping currently running app: {self.selected_fg_app.display_name if self.selected_fg_app else 'None'}")
             # The app should see that it's supposed to stop because app_running is set to False.
             # we'll know when that happens because it will release the app_lock.
             try:
@@ -233,7 +247,7 @@ class AppManager:
             except TimeoutError as e:
                 self.logger.critical(f"Failed to stop the currently running app within timeout: {e}")
                 self.logger.critical(f"Soft-resetting the badge in order to recover.")
-                self.logger.critical(f"This is caused by a bug in {self.selected_app.display_name if self.selected_app else 'the currently running app'} (usually an infinite loop).")
+                self.logger.critical(f"This is caused by a bug in {self.selected_fg_app.display_name if self.selected_fg_app else 'the currently running app'} (usually an infinite loop).")
                 self.logger.critical(f"Please report this bug to the app's developers.")
                 machine.soft_reset()  # Reset the badge to recover from the stuck app
                 return
@@ -241,9 +255,10 @@ class AppManager:
             self.fg_app_lock.release()
         
         # Now we can start the new app
-        self.selected_app = app_repr
+        self.selected_fg_app = app_repr
         self.logger.info(f"Creating app thread for: {app_repr.display_name} from {app_repr.app_path}")
         self.fg_app_running = True
+        _thread.stack_size(8192)  # Set a larger stack size for the app thread
         _thread.start_new_thread(app_thread, (app_repr, self))
     
     def get_app_by_path(self, app_path: str) -> Optional[AppRepr]:
@@ -262,36 +277,38 @@ class AppManager:
         Dispatch a packet to an app, waking it if necessary.
         """
         self.logger.debug(f"Dispatching packet to app: {packet.app_number}")
-        if self.selected_app and self.selected_app.app_number == packet.app_number:
-            self.logger.debug(f"Packet for currently running app {self.selected_app.display_name}.")
+        if self.selected_fg_app and self.selected_fg_app.app_number == packet.app_number:
+            self.logger.debug(f"Packet for currently running app {self.selected_fg_app.display_name}.")
             try:
                 self.selected_app_instance.on_packet(packet, True)
             except Exception as e:
-                self.logger.exception(e, f"Error while handling packet in {self.selected_app.display_name}:")
+                self.logger.exception(e, f"Error while handling packet in {self.selected_fg_app.display_name}:")
                 # TODO: display error on badge?
         else:
             # we need to load the app and run it in the background
             self.logger.debug(f"Packet for app {packet.app_number} not currently running. Loading it.")
-            app_repr = None
+            self.bg_app_repr = None
             for app in self.registered_apps:
                 if app.app_number == packet.app_number:
-                    app_repr = app
-                    self.logger.debug(f"Found app {app_repr.display_name} for number {packet.app_number}.")
+                    self.bg_app_repr = app
+                    self.logger.debug(f"Found app {self.bg_app_repr.display_name} for number {packet.app_number}.")
                     break
-            if app_repr is None:
+            if self.bg_app_repr is None:
                 self.logger.error(f"App with app_number {packet.app_number} not found. Cannot dispatch packet: {packet}")
                 return
-            
-            bg_launch_logger = logging.getLogger("BackgroundAppLaunch-" + app_repr.display_name)
+
+            bg_launch_logger = logging.getLogger("BackgroundAppLaunch-" + self.bg_app_repr.display_name)
             bg_launch_logger.setLevel(logging.DEBUG)
-            bg_launch_logger.info(f"Launching app {app_repr.display_name} in background for packet handling.")
+            bg_launch_logger.info(f"Launching app {self.bg_app_repr.display_name} in background for packet handling.")
             try:
-                app = load_app(bg_launch_logger, app_repr)
+                app = load_app(bg_launch_logger, self.bg_app_repr)
                 app.on_packet(packet, False)  # Handle the packet
-                bg_launch_logger.info(f"App {app_repr.display_name} handled packet successfully.")
+                bg_launch_logger.info(f"App {self.bg_app_repr.display_name} handled packet successfully.")
             except Exception as e:
-                bg_launch_logger.exception(e, f"Error while handling packet in background app {app_repr.display_name}:")
-    
+                bg_launch_logger.exception(e, f"Error while handling packet in background app {self.bg_app_repr.display_name}:")
+            finally:
+                self.bg_app_repr = None
+
     async def home_button_watcher(self) -> None:
         """
         Watch for the home button press and handle it.
