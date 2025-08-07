@@ -1,7 +1,7 @@
 import badge
 import utime
 
-# NOTE: MOST APPS SHOULD NOT NEED THESE IMPORTS.
+# NOTE: MOST APPS RFC2119-SHOULD-NOT NEED THESE IMPORTS.
 # home-screen is messing with app launches, so it's special.
 # Please especially note that asyncio is not likely to work for
 # normal apps - it _will_ interfere with the main OS's event loop

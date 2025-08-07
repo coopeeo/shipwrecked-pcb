@@ -3,5 +3,6 @@
     "logoPath": "badge-icon.pbm",
     "fullScreen": "false",
     "suppressNotifs": "false",
-    "permissions": []
+    "permissions": [],
+    "appNumber": 4
 }

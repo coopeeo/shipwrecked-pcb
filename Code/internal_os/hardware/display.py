@@ -27,7 +27,7 @@ class LockWrapper:
         start_time = utime.ticks_ms()
         while not self.lock.acquire(0):
             if utime.ticks_diff(utime.ticks_ms(), start_time) > self.timeout * 1000:
-                raise TimeoutError(f"Failed to acquire display lock within timeout period. In other words, the other thread has grabbed it and is busy for some reason. (Raised from thread {_thread.get_ident()})")
+                raise RuntimeError(f"Failed to acquire display lock within timeout period. In other words, the other thread has grabbed it and is busy for some reason. (Raised from thread {_thread.get_ident()})")
             utime.sleep(0.01)
         self.logger.debug(f"Display lock acquired from thread {_thread.get_ident()}")
 
@@ -73,8 +73,12 @@ class BadgeDisplay:
         while True:
             current_time = utime.ticks_ms()
             if utime.ticks_diff(current_time, self.last_action) > 5000 and not self.is_asleep:
-                self.logger.info(f"No activity detected, putting display to sleep")
-                self.sleep()
+                try:
+                    self.logger.info(f"No activity detected, putting display to sleep")
+                    self.sleep_disp()
+                    self.logger.debug(f"Display is now asleep (self.is_asleep={self.is_asleep}) from thread {_thread.get_ident()}")
+                except NotImplementedError as e:
+                    self.logger.error(f"Display sleep not implemented: {e}")
             await asyncio.sleep(0.5)
     
     def reset_idle_timer(self):
@@ -90,7 +94,7 @@ class BadgeDisplay:
             self.display.display()
         self.reset_idle_timer()
 
-    def sleep(self):
+    def sleep_disp(self):
         """Put the display to sleep to save power"""
         with LockWrapper(self.display_lock):
             self.display.sleep()

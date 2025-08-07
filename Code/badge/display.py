@@ -8,21 +8,18 @@ import framebuf
 from microfont import MicroFont
 import _thread
 
-def _is_display_allowed() -> bool:
-    """
-    Check if the display is allowed to be used.
-    """
-    # thread ident 2 = core 1 = foregrounded app
-    # we can only rely on this because of the RP2040's implementation of get_ident():
-    # https://github.com/micropython/micropython/blob/master/ports/rp2/mpthreadport.c#L123
-    return _thread.get_ident() == 2  
-
 from internal_os.internalos import InternalOS
 
 internal_os = InternalOS.instance()
 
 width = 200
 height = 200
+
+def _is_display_allowed() -> bool:
+    """
+    Check if the display is allowed to be used.
+    """
+    return internal_os.apps.get_current_app_repr() == internal_os.apps.selected_fg_app
 
 def sleep():
     """
@@ -31,7 +28,7 @@ def sleep():
     """
     if not _is_display_allowed():
         raise RuntimeError("Cannot call display functions from a backgrounded app context.")
-    internal_os.display.sleep()
+    internal_os.display.sleep_disp()
 
 def show() -> None:
     """
@@ -138,19 +135,24 @@ def text(text: str, x: int, y: int, color: int = 0) -> None:
         raise RuntimeError("Cannot call display functions from a backgrounded app context.")
     internal_os.display.text(text, x, y, color)
 
+import gc
+print(f"Mem before fonts: {gc.mem_free()}")
+
 nice_fonts = {
     18: MicroFont("fonts/victor_B_18.mfnt"),
     24: MicroFont("fonts/victor_B_24.mfnt"),
     32: MicroFont("fonts/victor_B_32.mfnt"),
     42: MicroFont("fonts/victor_B_42.mfnt"),
     54: MicroFont("fonts/victor_B_54.mfnt"),
-    70: MicroFont("fonts/victor_B_70.mfnt"),
+    68: MicroFont("fonts/victor_B_68.mfnt"),
 }
+
+print(f"Mem after fonts: {gc.mem_free()}")
 
 def nice_text(text: str, x: int, y: int, font: Union[int, MicroFont] = 18, color: int = 0, *, rot: int = 0, x_spacing: int = 0, y_spacing: int = 0) -> None:
     """
     Draw text using a nice font.
-    Included fonts are Victor Mono Bold in 12, 18, 32, and 70.
+    Included fonts are Victor Mono Bold in 18, 24, 32, 42, 54, and 68 point sizes.
     If these are not adequate, you can provide a MicroFont instance with your own font.
     :param text: The text to draw.
     :param x: X coordinate of the text.

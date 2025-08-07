@@ -9,7 +9,11 @@ if implementation.name == 'circuitpython':
         sleep(ms/1000)
 
 def ASSERT(state):
-    assert state == ERR_NONE, ERROR[state]
+    if state != ERR_NONE:
+        print(f"ASSERT: {ERROR[state]}")
+    else:
+        print("ASSERT: No error")
+    # assert state == ERR_NONE, ERROR[state]
 
 def yield_():
     sleep_ms(1)

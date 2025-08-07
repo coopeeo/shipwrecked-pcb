@@ -1,3 +1,4 @@
+from internal_os.hardware.radio import Packet
 import logging
 
 class BaseApp:
@@ -34,10 +35,11 @@ class BaseApp:
         """
         pass
 
-    def on_packet_while_not_active(self, packet) -> None:
+    def on_packet(self, packet: Packet, in_foreground: bool) -> None:
         """
-        Called if the app is configured to be woken if it receives a packet while not active.
-        Most APIs (e.g. `display`, `input`, etc.) will not be available in this method.
-        Intended to e.g. send a message or modify a file.
+        Called when a packet is received while the app is running.
+        This method should be overridden by the app if it needs to handle packets.
+        NOTE: THIS FUNCTION DOES NOT RUN ON THE SAME THREAD AS THE APP'S MAIN LOOP.
+        Treat this like an interrupt handler: be quick and be mindful of concurrency.
         """
-        pass
+        raise NotImplementedError(f"The app {self.__class__.__name__} (running in the {'foreground' if in_foreground else 'background'}) received a packet: {packet}, but does not implement on_packet.")

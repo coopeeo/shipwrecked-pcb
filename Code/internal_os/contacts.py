@@ -11,14 +11,14 @@ class Contact:
     """
     Represents a contact.
     """
-    def __init__(self, name: str, pronouns: str, badge_id: str, handle: str):
+    def __init__(self, name: str, pronouns: str, badge_id: int, handle: str):
         self.name = name
         self.pronouns = pronouns
-        self.badge_id = badge_id
+        self.badge_id = int(badge_id)
         self.handle = handle
 
     def __repr__(self):
-        return f"Contact(name={self.name}, pronouns={self.pronouns}, badge_id={self.badge_id})"
+        return f"Contact(name={self.name}, pronouns={self.pronouns}, badge_id=0x{self.badge_id:0>4x}, handle={self.handle})"
     
     def to_dict(self):
         """
@@ -35,7 +35,8 @@ class ContactsManager:
     """
     A database of mappings between names, pronouns and badge IDs.
     """
-    def __init__(self, contacts_file: str = "/contacts.json"):
+    def __init__(self, internal_os, contacts_file: str = "/contacts.json"):
+        self.internal_os = internal_os
         self.logger = logging.getLogger("ContactsManager")
         self.logger.setLevel(logging.INFO)
 
@@ -58,6 +59,26 @@ class ContactsManager:
 
         self.contacts_file = contacts_file
         self.contacts = self.load_contacts()
+        self.logger.info(f"Loaded {len(self.contacts)} contacts from {contacts_file}")
+        self.load_from_config()  # Load user's own contact from config.json
+    
+    def load_from_config(self) -> None:
+        """
+        Load the user's own contact from the config.json file.
+        """
+        try:
+            with open("/config.json", 'r') as f:
+                config = json.load(f)
+                self.remove_contact_by_badge_id(self.internal_os.get_badge_id_int())  # Remove any existing contact with the same badge ID
+                self.add_contact(
+                    name=config.get('userName', 'Unknown'),
+                    pronouns=config.get('userPronouns', ''),
+                    badge_id=self.internal_os.get_badge_id_int(),
+                    handle=config.get('userHandle', '')
+                )
+                self.logger.info(f"Loaded user's contact: {self.get_contact_by_badge_id(self.internal_os.get_badge_id_int())}")
+        except Exception as e:
+            self.logger.error(f"Error loading user's contact from config: {e}. Please ensure config.json exists and is valid.")
 
     def load_contacts(self) -> List[Contact]:
         """
@@ -81,7 +102,7 @@ class ContactsManager:
         except Exception as e:
             self.logger.error(f"Error saving contacts: {e}")
 
-    def add_contact(self, name: str, pronouns: str, badge_id: str, handle: str) -> None:
+    def add_contact(self, name: str, pronouns: str, badge_id: int, handle: str) -> None:
         """
         Add a new contact to the contacts list.
         """
@@ -89,7 +110,7 @@ class ContactsManager:
         self.contacts.append(new_contact)
         self.save_contacts()
 
-    def get_contact_by_badge_id(self, badge_id: str) -> Optional[Contact]:
+    def get_contact_by_badge_id(self, badge_id: int) -> Optional[Contact]:
         """
         Get a contact by their badge ID.
         """
@@ -107,7 +128,7 @@ class ContactsManager:
                 return contact
         return None
     
-    def remove_contact_by_badge_id(self, badge_id: str) -> bool:
+    def remove_contact_by_badge_id(self, badge_id: int) -> bool:
         """
         Remove a contact by their badge ID.
         :return: True if the contact was removed, False if not found.

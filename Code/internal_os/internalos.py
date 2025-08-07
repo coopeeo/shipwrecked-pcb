@@ -1,5 +1,6 @@
 import _thread
 import asyncio
+import gc
 
 from machine import RTC, Pin, PWM, unique_id
 
@@ -37,6 +38,11 @@ class InternalOS:
         return cls._instance
     
     def start(self):
+        self.setup()
+        print("Badge started. Running forever...")
+        self.run_forever()
+    
+    def setup(self):
         """
         Starts the badge. Never returns.
         """
@@ -44,18 +50,19 @@ class InternalOS:
         # 1. Initialize hardware, IRQs, state, etc.
         # 2. Schedule the needed background tasks.
         # 3. Start the asyncio event loop.
-
+    
         # Step 1:
         # hardware
         self.display = BadgeDisplay()
-        self.radio = BadgeRadio()
+        self.radio = BadgeRadio(self)
         self.buttons = BadgeButtons()
         self.rtc = RTC()
         self.buzzer = PWM(Pin(28, Pin.OUT))
         self.led = PWM(Pin(16, Pin.OUT))
 
         # software
-        self.contacts = ContactsManager()
+        gc.enable()
+        self.contacts = ContactsManager(self)
         self.notifs = NotifManager()
         self.apps = AppManager(self.buttons, self.display)
 
@@ -64,10 +71,13 @@ class InternalOS:
         asyncio.create_task(self.apps.scan_forever(interval=15)) # TODO: lower this interval in prod?
         asyncio.create_task(self.apps.home_button_watcher())
         asyncio.create_task(self.display.idle_when_inactive())
-        asyncio.create_task(self.launch_home_screen()) # TODO: remove this when the app manager is implemented
+        asyncio.create_task(self.radio.manage_packets_forever())
+        asyncio.create_task(self.launch_home_screen())
 
+    def run_forever(self):
         # Step 3:
         asyncio.run(self.run_async())
+        print("Forever is done")
 
     async def run_async(self):
         """
@@ -82,15 +92,18 @@ class InternalOS:
         This is the app that is shown when the badge is started.
         """
         await asyncio.sleep(1)  # Give time for the display to initialize
-        home_app = self.apps.get_app_by_path('/apps/home-screen')
+        home_app = self.apps.get_app_by_path('/apps/badge')
         if not home_app:
             self.apps.logger.error("Home app not found. Cannot launch home screen.")
             return
         await self.apps.launch_app(home_app)
 
-    def get_badge_id(self) -> str:
+    def get_badge_id_hex(self) -> str:
         """
         Returns the badge ID as a hex string.
         The badge ID is the last 2 bytes (4 digits) of the machine.unique_id().
         """
         return unique_id().hex()[-4:]
+    
+    def get_badge_id_int(self) -> int:
+        return int.from_bytes(unique_id()[-2:], 'big')
