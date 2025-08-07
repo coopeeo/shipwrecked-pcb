@@ -4,6 +4,7 @@ from machine import unique_id
 import struct
 import logging
 import gc
+import os
 print(f"Free memory before import: {gc.mem_free()} bytes")
 gc.collect()  # Collect garbage to free up memory
 print(f"Free memory after collect: {gc.mem_free()} bytes")
@@ -48,15 +49,36 @@ class Message:
     @classmethod
     def from_bytes(cls, data: bytes) -> 'Message':
         logger = logging.getLogger("Message.from_bytes")
+        logger.setLevel(logging.DEBUG)
+        logger.debug(f"free memory before decoding: {gc.mem_free()} bytes")
+        gc.collect()  # Collect garbage before decoding
+        logger.debug(f"free memory after collect: {gc.mem_free()} bytes")
 
         if len(data) != struct.calcsize(MSG_FMT):
             raise ValueError("Invalid message data length")
         reserved, sigr, sigs, creation_timestamp, length, message = struct.unpack(MSG_FMT, data)
+        logger.debug(f"Unpacked data: reserved={reserved}, sigr={sigr.hex()}, sigs={sigs.hex()}, creation_timestamp={creation_timestamp}, length={length}, message={message}")
         if reserved != 0:
             logger.warning("Reserved byte is not zero, this badge is probably outdated")
         signature = Signature(int.from_bytes(sigr, 'big'), int.from_bytes(sigs, 'big'))
+        try:
+            decoded = message[:length].decode('utf-8').rstrip('\x00')  # Decode bytes to string and remove padding null bytes
+        except UnicodeError:
+            logger.error("Failed to decode message, it may be corrupted or not UTF-8 encoded")
+            decoded = "message decode error"
+            # hack so that message gets rejected as old
+            creation_timestamp = 0
+        
+        # logger.debug(f"free memory after unpacking: {gc.mem_free()} bytes")
+        # gc.collect()
+        # logger.debug(f"free memory after second collect: {gc.mem_free()} bytes")
+        # mem_info(True)
 
-        return cls(creation_timestamp, message.decode().rstrip('\x00'), signature)        
+        # decoded = ''.join(chr(message[i]) for i in range(179))  # Convert bytes to string
+        # print(f"Decoded message: {decoded}")
+        # print(f"Free memory after decoding: {gc.mem_free()} bytes")
+        # decoded = decoded.rstrip('\x00')  # Remove padding null bytes
+        return cls(creation_timestamp, decoded, signature)  
 
     def to_bytes(self) -> bytes:
         """Convert the message to raw bytes"""
@@ -69,7 +91,7 @@ class Message:
         return struct.pack(MSG_FMT, reserved, self.signature, self.creation_timestamp, length, message_bytes)
     
     def __repr__(self) -> str:
-        return f"Message(creation_timestamp={self.creation_timestamp}, message='{self.message}', signature_valid={self.signature_valid}, signature={self.signature} (r={self.signature.r}, s={self.signature.s}))"
+        return f"Message(creation_timestamp={self.creation_timestamp}, message='{self.message}', signature_valid={self.is_signature_valid()}, signature={self.signature} (r={self.signature.r}, s={self.signature.s}))"
 
 class App(badge.BaseApp):
     def __init__(self) -> None:
@@ -83,7 +105,7 @@ class App(badge.BaseApp):
                 return timestamp
         except Exception as e:
             self.logger.error(f"Failed to load last displayed timestamp: {e}")
-            return 0
+            return 1
     
     def set_last_displayed_message_timestamp(self, timestamp: int) -> None:
         try:
@@ -94,7 +116,7 @@ class App(badge.BaseApp):
 
     def on_open(self) -> None:
         try:
-            with open(badge.util.get_data_dir() + "/last_packet.bin", "rb") as f:
+            with open(badge.util.get_data_dir() + "/last_message.bin", "rb") as f:
                 data = f.read()
                 if data:
                     message = Message.from_bytes(data)
@@ -118,8 +140,11 @@ class App(badge.BaseApp):
         if self.received_message:
             self.logger.info(f"Displaying message: {self.received_message}")
             badge.display.fill(1)
-            badge.display.nice_text("Announcement", 0, 0, 42)
-            badge.display.nice_text(self.received_message.message, 0, 40, 32)
+            badge.display.nice_text("Announced:", 0, 0, 42)
+            # word wrapping the message to fit in the display
+            max_chars_per_line = 200 // badge.display.nice_fonts[32].max_width
+            wrapped_message = [self.received_message.message[i:i + max_chars_per_line] for i in range(0, len(self.received_message.message), max_chars_per_line)]
+            badge.display.nice_text('\n'.join(wrapped_message), 0, 40, 32)
             badge.display.show()
             self.set_last_displayed_message_timestamp(self.received_message.creation_timestamp)
             self.received_message = None
@@ -137,14 +162,14 @@ class App(badge.BaseApp):
 
     def on_packet(self, packet: badge.radio.Packet, is_foreground: bool) -> None:
         # NOTE to people looking at this for inspiration:
-        # It is very bad behavoir for most apps to forcibly
+        # Ite is very bad behavoir for most apps to forcibly
         # launch themselves from the background like this.
         # The announcements app is an exception because receiving
         # announcements is quite literally the primary function
         # of the Shipwrecked badge.
         # Again, your apps RFC2119-SHOULD-NOT do this.
         self.logger.info(f"Received message packet: {packet}")
-        # verify it so we don't launch/update on a spoofed or old message
+        # verify it so we don't launch/updat on a spoofed or old message
         message = Message.from_bytes(packet.data)
         if not self.should_display_message(message):
             self.logger.info(f"Not displaying message: {message}")

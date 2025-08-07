@@ -1,5 +1,6 @@
 import badge
 import utime
+from badge.radio import Packet
 
 class App(badge.BaseApp):
     def on_open(self) -> None:
@@ -14,4 +15,9 @@ class App(badge.BaseApp):
         if badge.input.get_button(1):  # If button 1 is pressed
             badge.display.text(f"Counter is {self.counter}", 0, 10, 0)
             badge.display.show()  # Update the display with the new counter value
+            badge.radio.send_packet(0xffff, f"Hello World! \n Here is some long text that is likely to get corrupted :( Counter: {self.counter}".encode('utf-8'))  # Send a packet with the counter value
         utime.sleep(1)
+    def on_packet(self, packet: Packet, in_foreground: bool) -> None:
+        self.logger.info(f"Received packet: {packet}")
+        if in_foreground:
+            badge.display.text(packet.data.decode('utf-8'), 0, 20, 0)

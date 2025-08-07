@@ -1,5 +1,6 @@
 import _thread
 import asyncio
+import gc
 
 from machine import RTC, Pin, PWM, unique_id
 
@@ -37,6 +38,11 @@ class InternalOS:
         return cls._instance
     
     def start(self):
+        self.setup()
+        print("Badge started. Running forever...")
+        self.run_forever()
+    
+    def setup(self):
         """
         Starts the badge. Never returns.
         """
@@ -44,7 +50,7 @@ class InternalOS:
         # 1. Initialize hardware, IRQs, state, etc.
         # 2. Schedule the needed background tasks.
         # 3. Start the asyncio event loop.
-
+    
         # Step 1:
         # hardware
         self.display = BadgeDisplay()
@@ -55,6 +61,7 @@ class InternalOS:
         self.led = PWM(Pin(16, Pin.OUT))
 
         # software
+        gc.enable()
         self.contacts = ContactsManager()
         self.notifs = NotifManager()
         self.apps = AppManager(self.buttons, self.display)
@@ -67,8 +74,10 @@ class InternalOS:
         asyncio.create_task(self.radio.manage_packets_forever())
         asyncio.create_task(self.launch_home_screen())
 
+    def run_forever(self):
         # Step 3:
         asyncio.run(self.run_async())
+        print("Forever is done")
 
     async def run_async(self):
         """
@@ -83,7 +92,7 @@ class InternalOS:
         This is the app that is shown when the badge is started.
         """
         await asyncio.sleep(1)  # Give time for the display to initialize
-        home_app = self.apps.get_app_by_path('/apps/messenger')
+        home_app = self.apps.get_app_by_path('/apps/hello-world')
         if not home_app:
             self.apps.logger.error("Home app not found. Cannot launch home screen.")
             return

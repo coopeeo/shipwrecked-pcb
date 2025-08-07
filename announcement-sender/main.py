@@ -36,6 +36,7 @@ print(f"Full message: {full_msg}")
 vk = sk.publicKey()
 is_valid = Ecdsa.verify(sigless_msg, signature, vk)
 print(f"Signature valid: {is_valid}")
+print(f"Signature: r={signature.r.to_bytes(32, byteorder="big").hex()}, s={signature.s.to_bytes(32, byteorder="big").hex()}")
 
 available_ports = serial.tools.list_ports.comports()
 print("Available serial ports:")
@@ -48,12 +49,27 @@ device = belay.Device(selected_port)
 
 @device.setup
 def setup():
-    from internal_os.hardware.radio import BadgeRadio
-    radio = BadgeRadio(None)
+    print("Shipwrecked PCB Badge OS starting...")
+    from internal_os import internalos
+    import asyncio
+    badge = internalos.InternalOS.instance()
+    badge.setup()
 
 @device.task
 def send_announcement(msg):
-    radio._send_msg(0xFFFF, 3, msg)
+    # async def send_thing():
+    #     print("waiting to send...")
+    #     await asyncio.sleep(10)
+    #     print(f"HEY! sending thing: {msg}")
+    #     with open("/data/messenger/message_to_send.bin", "wb") as f:
+    #         f.write(msg)
+        
+    #     await badge.apps.launch_app(badge.apps.get_app_by_path("/apps/messenger"))
+    # asyncio.create_task(send_thing())
+    # badge.run_forever()
+    badge.radio._send_msg(b'\xff\xff', b'\x00\x03', msg)
+
+setup()
 
 confirm = input(f"Are you sure you want to send this announcement? (y/n): ")
 if not confirm.lower().startswith("y"):
@@ -63,7 +79,10 @@ if not confirm.lower().startswith("y"):
 print(f"Sending announcement via {selected_port}...")
 for i in range(4):
     print(f"Sending announcement, attempt {i+1}/5...")
-    send_announcement(full_msg)
+    try:
+        send_announcement(full_msg)
+    except Exception as e:
+        print(f"There was an error on this attempt. It's probably fine tho :p {e}")
     time.sleep(3)
 # last one
 print("Sending announcement, attempt 5/5...")

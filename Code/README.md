@@ -7,3 +7,6 @@ The rest of this page is about how the badge works under the hood and how to dev
 The badge's operating system is structured around the `InternalOS` class. This class coordinates the various subsystems of the badge. Most of its functions run asynchronously on the main core, leaving the second core free to run the app thread.
 
 For additional documentation, especially early plans, check the canvases in the #shipwrecked-pcb channel.
+
+## Upload code
+Use the webflasher. Or, to upload code manually, use `make upload PORT=<port>`. You can also use `make run PORT=<port>` to upload and run the code in one command. This handles compiling things to mpy for memory efficiency.

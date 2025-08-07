@@ -16,6 +16,7 @@ import json
 import _thread
 import machine
 import utime
+from micropython import mem_info
 
 class AppRepr:
     """
@@ -258,6 +259,7 @@ class AppManager:
         self.selected_fg_app = app_repr
         self.logger.info(f"Creating app thread for: {app_repr.display_name} from {app_repr.app_path}")
         self.fg_app_running = True
+        # mem_info(True)
         _thread.stack_size(8192)  # Set a larger stack size for the app thread
         _thread.start_new_thread(app_thread, (app_repr, self))
     
@@ -279,11 +281,15 @@ class AppManager:
         self.logger.debug(f"Dispatching packet to app: {packet.app_number}")
         if self.selected_fg_app and self.selected_fg_app.app_number == packet.app_number:
             self.logger.debug(f"Packet for currently running app {self.selected_fg_app.display_name}.")
+            self.bg_app_repr = self.selected_fg_app
             try:
                 self.selected_app_instance.on_packet(packet, True)
             except Exception as e:
                 self.logger.exception(e, f"Error while handling packet in {self.selected_fg_app.display_name}:")
                 # TODO: display error on badge?
+            finally:
+                self.bg_app_repr = None
+                self.logger.debug(f"Packet handled for app {self.selected_fg_app.display_name}.")
         else:
             # we need to load the app and run it in the background
             self.logger.debug(f"Packet for app {packet.app_number} not currently running. Loading it.")
