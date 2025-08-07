@@ -23,11 +23,18 @@ export default function ConnectionSettings() {
   }
 
   return (
-    <div>
+    <div className="connection-settings">
       <h2>Badge Connection</h2>
-      <div>Status: {isConnected ? "Connected" : "Disconnected"}</div>
-      {error && <div style={{ color: 'red' }}>Error: {error.message}</div>}
-      <button onClick={isConnected ? disconnect : connect}>
+      <div className="connection-status">
+        <div className={`status-indicator ${isConnected ? 'connected' : ''}`}>
+          {isConnected ? "Connected" : "Disconnected"}
+        </div>
+        {error && <div className="error-message">Error: {error.message}</div>}
+      </div>
+      <button 
+        className={`button ${isConnected ? 'secondary' : 'primary'}`}
+        onClick={isConnected ? disconnect : connect}
+      >
         {isConnected ? "Disconnect" : "Connect"}
       </button>
     </div>

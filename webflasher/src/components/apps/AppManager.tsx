@@ -1,15 +1,76 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useMicroPython } from '../../MicroPythonContext';
+import { useDeviceState } from '../../DeviceStateContext';
 import AppListItem, { App } from './AppListItem';
+import './AppManager.css';
 
 interface AppManagerProps {
     apps: App[];
-    onAppListChange: () => void;
+    onAppListChange: (apps: App[]) => void;
 }
 
 export default function AppManager({ apps, onAppListChange }: AppManagerProps) {
-    const { mp } = useMicroPython();
+    const { mp, isConnected } = useMicroPython();
     const [status, setStatus] = useState<string>("");
+
+    const { needsRefresh, setIsScanning, isScanning, firmwareStatus } = useDeviceState();
+
+    useEffect(() => {
+        if (isConnected && mp && !isScanning) {
+            scanForApps();
+        } else if (!isConnected) {
+            onAppListChange([]);
+        }
+    }, [isConnected, mp, needsRefresh]);
+
+    const scanForApps = async () => {
+        if (!mp) return;
+
+        setIsScanning(true);
+        try {
+            setStatus("Scanning for apps...");
+            const files = await mp.listFiles();
+            console.log("Files on device:", files);
+
+            const appsFolder = files.find((f: { path: string, type: string }) => f.path === "/apps" && f.type === "folder");
+            if (!appsFolder) {
+                setStatus("No apps folder found");
+                onAppListChange([]);
+                return;
+            }
+
+            const newApps: App[] = [];
+            const appFolders = appsFolder.childNodes;
+
+            for (const appFolder of appFolders) {
+                const manifestPath = `${appFolder.path}/manifest.json`;
+                if (appFolder.childNodes.find((f: any) => f.path === manifestPath)) {
+                    try {
+                        const manifestContent = await mp.downloadFileToString(manifestPath);
+                        const manifest = JSON.parse(manifestContent);
+                        if (manifest.displayName && manifest.logoPath && typeof manifest.appNumber === 'number') {
+                            newApps.push({
+                                manifest,
+                                path: appFolder.path
+                            });
+                        }
+                    } catch (error) {
+                        console.error(`Failed to load manifest for ${appFolder.path}:`, error);
+                    }
+                }
+            }
+
+            onAppListChange(newApps);
+            setStatus(newApps.length ? `Found ${newApps.length} apps` : "No apps installed");
+            console.log("Found apps:", newApps);
+        } catch (error) {
+            console.error("Failed to scan for apps:", error);
+            setStatus("Failed to scan for apps");
+            onAppListChange([]);
+        } finally {
+            setIsScanning(false);
+        }
+    };
 
     const handleAppUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         if (!event.target.files || !event.target.files[0] || !mp) return;
@@ -20,6 +81,7 @@ export default function AppManager({ apps, onAppListChange }: AppManagerProps) {
             return;
         }
 
+        setIsScanning(true);
         try {
             setStatus("Processing app upload...");
             const JSZip = (await import('jszip')).default;
@@ -54,7 +116,11 @@ export default function AppManager({ apps, onAppListChange }: AppManagerProps) {
             }
 
             setStatus("App uploaded successfully");
-            onAppListChange();
+            const updatedApps = [...apps, {
+                path: appPath,
+                manifest: manifest,
+            }];
+            onAppListChange(updatedApps);
         } catch (error) {
             console.error("Failed to upload app:", error);
             setStatus("Failed to upload app");
@@ -68,17 +134,21 @@ export default function AppManager({ apps, onAppListChange }: AppManagerProps) {
             setStatus(`Deleting ${app.manifest.displayName}...`);
             await mp.removeFolder(app.path);
             setStatus(`${app.manifest.displayName} deleted successfully`);
-            onAppListChange();
+            const updatedApps = apps.filter(a => a.path !== app.path);
+            onAppListChange(updatedApps);
         } catch (error) {
             console.error("Failed to delete app:", error);
             setStatus(`Failed to delete ${app.manifest.displayName}`);
         }
     };
 
+    const isDeviceBusy = firmwareStatus === 'updating' || isScanning;
+    const canUploadApp = isConnected && !isDeviceBusy;
+
     return (
         <div className="app-manager">
             <h3>App Management</h3>
-            <p>{status}</p>
+            {status && <div className={`status-message ${status.includes("Error") ? "error" : ""}`}>{status}</div>}
             
             <div className="app-upload">
                 <input
@@ -87,21 +157,34 @@ export default function AppManager({ apps, onAppListChange }: AppManagerProps) {
                     onChange={handleAppUpload}
                     style={{ display: 'none' }}
                     id="app-upload-input"
+                    disabled={!canUploadApp}
                 />
-                <button onClick={() => document.getElementById('app-upload-input')?.click()}>
+                <button 
+                    className="button primary"
+                    onClick={() => document.getElementById('app-upload-input')?.click()}
+                    disabled={!canUploadApp}
+                    title={
+                        !isConnected ? "Connect to a device first" :
+                        isDeviceBusy ? "Please wait for current operation to complete" :
+                        "Upload a new app to the badge"
+                    }
+                >
                     Upload New App
                 </button>
             </div>
 
             <div className="app-list">
-                {apps.length === 0 ? (
-                    <p>No apps installed</p>
+                {isScanning ? (
+                    <div className="app-status">Scanning for apps...</div>
+                ) : apps.length === 0 ? (
+                    <div className="app-status">No apps installed</div>
                 ) : (
                     apps.map(app => (
                         <AppListItem
                             key={app.path}
                             app={app}
                             onDelete={handleAppDelete}
+                            disabled={isDeviceBusy}
                         />
                     ))
                 )}
