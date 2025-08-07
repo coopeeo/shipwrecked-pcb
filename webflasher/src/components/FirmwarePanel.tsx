@@ -43,7 +43,7 @@ export default function FirmwarePanel() {
         setStatus("Fetching firmware update...");
         // Fetch firmware.zip from the firmware-zips branch using the GitHub API
         const zipResponse = await fetch(
-          "https://api.github.com/repos/mpkendall/shipwrecked-pcb/contents/firmware.zip?ref=firmware-zips"
+          "https://api.github.com/repos/mpkendall/shipwrecked-pcb/contents/firmware-zips/firmware.zip?ref=firmware-zips"
         );
         const zipData = await zipResponse.json();
         if (!zipData.content) {
