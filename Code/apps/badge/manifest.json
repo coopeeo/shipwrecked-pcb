@@ -1,8 +1,6 @@
 {
     "displayName": "Badge",
     "logoPath": "badge-icon.pbm",
-    "fullScreen": "false",
-    "suppressNotifs": "false",
     "permissions": [],
     "appNumber": 4
 }
