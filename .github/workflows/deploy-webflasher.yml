@@ -39,7 +39,7 @@ jobs:
         working-directory: ./webflasher
         run: npm run build
         env:
-          PUBLIC_URL: /shipwrecked-pcb
+          PUBLIC_URL: /
           CI: false # don't die on warnings
 
       - name: Setup Pages
