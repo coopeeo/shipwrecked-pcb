@@ -271,13 +271,14 @@ export class MicroPython extends EventEmitter {
     return atob(base64)
   }
   async uploadFile(path, content, reporter) {
+    const CHUNK_SIZE = 512
     reporter = reporter || function() { return false }
     // Content is a typed array
     await this.getPrompt()
     await this.enterRawRepl()
     await this.executeRaw(`f=open('${path}','wb')\nw=f.write`)
-    for (let i = 0; i < content.byteLength; i += 128) {
-      const c = new Uint8Array(content.slice(i, i+128))
+    for (let i = 0; i < content.byteLength; i += CHUNK_SIZE) {
+      const c = new Uint8Array(content.slice(i, i+CHUNK_SIZE))
       await this.executeRaw(`w(bytes([${c}]))`)
       reporter( parseInt( (i/content.byteLength)*100 ) + '%' )
     }

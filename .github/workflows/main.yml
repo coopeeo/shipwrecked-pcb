@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - deploy
+  workflow_dispatch:
 
 jobs:
   build-and-release:
@@ -35,12 +36,17 @@ jobs:
         working-directory: ./Code/build
         run: zip -r ../firmware.zip .
       
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: ./Code/firmware.zip
-          tag_name: v${{ steps.get_version.outputs.version }}
-          name: Release v${{ steps.get_version.outputs.version }}
-          draft: false
-          prerelease: false
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout firmware-zips branch
+        run: |
+          git fetch origin firmware-zips:firmware-zips || git checkout -b firmware-zips
+          git checkout firmware-zips
+      
+      - name: Add firmware ZIP to branch
+        run: |
+          mkdir -p firmware-zips
+          cp ./Code/firmware.zip firmware-zips/firmware.zip
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add firmware-zips/firmware.zip
+          git commit -m "Add firmware v${{ steps.get_version.outputs.version }}"
+          git push origin firmware-zips
