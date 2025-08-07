@@ -41,17 +41,22 @@ export default function FirmwarePanel() {
         setFirmwareStatus('idle');
       } else {
         setStatus("Fetching firmware update...");
-        const releasesResponse = await fetch("https://api.github.com/repos/mpkendall/shipwrecked-pcb/releases/latest");
-        const releaseData = await releasesResponse.json();
-        const firmwareAsset = releaseData.assets.find((asset: any) => asset.name === "firmware.zip");
-        
-        if (!firmwareAsset) {
-          throw new Error("Firmware zip not found in latest release");
+        // Fetch firmware.zip from the firmware-zips branch using the GitHub API
+        const zipResponse = await fetch(
+          "https://api.github.com/repos/mpkendall/shipwrecked-pcb/contents/firmware.zip?ref=firmware-zips"
+        );
+        const zipData = await zipResponse.json();
+        if (!zipData.content) {
+          throw new Error("Firmware zip not found in firmware-zips branch");
         }
-
-        // Download the firmware zip
-        const zipResponse = await fetch("https://proxy.corsfix.com/?" + firmwareAsset.browser_download_url);
-        const zipBlob = await zipResponse.blob();
+        // Decode base64 content to binary
+        const binaryString = atob(zipData.content);
+        const len = binaryString.length;
+        const uint8Array = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+          uint8Array[i] = binaryString.charCodeAt(i);
+        }
+        const zipBlob = new Blob([uint8Array], { type: "application/zip" });
         await handleFirmwareZipBlob(zipBlob);
         setStatus("Firmware update ready to install.");
       }
