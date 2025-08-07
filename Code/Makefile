@@ -5,10 +5,10 @@ PORT ?= auto
 
 PY_FILES := $(shell find . -path ./$(BUILD_DIR) -prune -o -type f -name "*.py" ! -path "./main.py" -print)
 MPY_FILES := $(patsubst ./%, $(BUILD_DIR)/%, $(PY_FILES:.py=.mpy))
-OTHER_FILES := $(shell find . -path ./$(BUILD_DIR) -prune -o -type f ! -name "*.py" ! -name "*.mpy" -print)
+OTHER_FILES := $(shell find . -path ./$(BUILD_DIR) -prune -o \( -type f ! -name "*.py" ! -name "*.mpy" -o -path "./main.py" \) -print)
 COPY_FILES := $(patsubst ./%, $(BUILD_DIR)/%, $(OTHER_FILES))
 
-.PHONY: all clean upload run
+.PHONY: all clean upload run clean-badge compile
 
 all: $(MPY_FILES) $(COPY_FILES)
 
@@ -28,9 +28,15 @@ clean:
 	@rm -rf $(BUILD_DIR)
 	@find . -path ./$(BUILD_DIR) -prune -o -name "*.pyc" -exec rm {} \;
 
-upload: all
-	cp ./main.py $(BUILD_DIR)/main.py
-	cd $(BUILD_DIR) && $(MPREMOTE) connect $(PORT) cp -r . :/
+clean-badge:
+	@echo "Removing all files from badge..."
+	$(MPREMOTE) connect $(PORT) fs rm -r :/
+
+compile: all
+	@echo "Compilation complete. Files are ready in $(BUILD_DIR)."
+
+upload: compile
+	cd $(BUILD_DIR) && $(MPREMOTE) connect $(PORT) cp -r . :/ && cd ..
 
 run: upload
 	$(MPREMOTE) connect $(PORT) run main.py

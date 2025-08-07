@@ -1,0 +1,44 @@
+name: Build and Create Release
+
+on:
+  push:
+    branches:
+      - deploy
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      
+      - name: Install mpy-cross
+        run: |
+          pip install mpy-cross
+      
+      - name: Build firmware
+        working-directory: ./Code
+        run: make compile
+      
+      - name: Get version
+        id: get_version
+        run: echo "version=$(cat ./Code/VERSION)" >> $GITHUB_OUTPUT
+      
+      - name: Create release ZIP
+        working-directory: ./Code/build
+        run: zip -r ../firmware.zip .
+      
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ./Code/firmware.zip
+          tag_name: v${{ steps.get_version.outputs.version }}
+          name: Release v${{ steps.get_version.outputs.version }}
+          draft: false
+          prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}

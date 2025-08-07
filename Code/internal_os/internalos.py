@@ -62,7 +62,7 @@ class InternalOS:
 
         # software
         gc.enable()
-        self.contacts = ContactsManager()
+        self.contacts = ContactsManager(self)
         self.notifs = NotifManager()
         self.apps = AppManager(self.buttons, self.display)
 
@@ -92,7 +92,7 @@ class InternalOS:
         This is the app that is shown when the badge is started.
         """
         await asyncio.sleep(1)  # Give time for the display to initialize
-        home_app = self.apps.get_app_by_path('/apps/hello-world')
+        home_app = self.apps.get_app_by_path('/apps/badge')
         if not home_app:
             self.apps.logger.error("Home app not found. Cannot launch home screen.")
             return
@@ -104,3 +104,6 @@ class InternalOS:
         The badge ID is the last 2 bytes (4 digits) of the machine.unique_id().
         """
         return unique_id().hex()[-4:]
+    
+    def get_badge_id_int(self) -> int:
+        return int.from_bytes(unique_id()[-2:], 'big')
