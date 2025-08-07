@@ -21,7 +21,38 @@ class App(badge.BaseApp):
         self.render_home_screen()
 
     def loop(self) -> None:
+        if badge.input.get_button(8):
+            self.old_button = True
+        else:
+            if self.old_button:
+                # just released
+                self.logger.info("Button 8 pressed")
+                self.cursor_pos = (self.cursor_pos - 1) % len(internal_os.apps.registered_apps)
+                self.render_home_screen()
+            self.old_button = False
+
         if badge.input.get_button(1):
+            self.old_button = True
+        else:
+            if self.old_button:
+                # just released
+                self.logger.info("Button 1 pressed")
+                self.cursor_pos = (self.cursor_pos + 1) % len(internal_os.apps.registered_apps)
+                self.render_home_screen()
+            self.old_button = False
+
+        if badge.input.get_button(9):
+            self.old_button = True
+        else:
+            if self.old_button:
+                # just released
+                self.logger.info("Button 9 pressed")
+                self.logger.info(f"Launching app at position {self.cursor_pos}")
+                self.launch_app(internal_os.apps.registered_apps[self.cursor_pos])
+                return # don't run the rest of the loop - return control to the OS
+            self.old_button = False
+
+        """         if badge.input.get_button(1):
             if not self.old_button:
                 # just pressed
                 self.button_time = utime.ticks_ms()
@@ -37,7 +68,7 @@ class App(badge.BaseApp):
                 self.logger.info("Button 1 pressed")
                 self.cursor_pos = (self.cursor_pos + 1) % len(internal_os.apps.registered_apps)
                 self.render_home_screen()
-            self.old_button = False
+            self.old_button = False """
 
     def render_home_screen(self):
         """Render the home screen display."""
