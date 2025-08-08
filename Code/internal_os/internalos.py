@@ -7,6 +7,7 @@ from machine import RTC, Pin, PWM, unique_id
 from internal_os.hardware.display import BadgeDisplay
 from internal_os.hardware.buttons import BadgeButtons
 from internal_os.hardware.radio import BadgeRadio
+from internal_os.hardware.utils import BadgeUtils
 
 from internal_os.contacts import ContactsManager
 from internal_os.notifs import NotifManager
@@ -58,7 +59,7 @@ class InternalOS:
         self.buttons = BadgeButtons()
         self.rtc = RTC()
         self.buzzer = PWM(Pin(28, Pin.OUT))
-        self.led = PWM(Pin(16, Pin.OUT))
+        self.utils = BadgeUtils()
 
         # software
         gc.enable()
