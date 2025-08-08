@@ -21,7 +21,7 @@ class App(badge.BaseApp):
         self.render_home_screen()
 
     def loop(self) -> None:
-        if badge.input.get_button(8):
+        if badge.input.get_button(badge.input.Buttons.SW11):
             self.old_button = True
         else:
             if self.old_button:
@@ -31,7 +31,7 @@ class App(badge.BaseApp):
                 self.render_home_screen()
             self.old_button = False
 
-        if badge.input.get_button(1):
+        if badge.input.get_button(badge.input.Buttons.SW4):
             self.old_button = True
         else:
             if self.old_button:
@@ -41,7 +41,7 @@ class App(badge.BaseApp):
                 self.render_home_screen()
             self.old_button = False
 
-        if badge.input.get_button(9):
+        if badge.input.get_button(badge.input.Buttons.SW12):
             self.old_button = True
         else:
             if self.old_button:
