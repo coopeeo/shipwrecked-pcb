@@ -93,7 +93,7 @@ class InternalOS:
         This is the app that is shown when the badge is started.
         """
         await asyncio.sleep(1)  # Give time for the display to initialize
-        home_app = self.apps.get_app_by_path('/apps/badge')
+        home_app = self.apps.get_app_by_path('/apps/home-screen')
         if not home_app:
             self.apps.logger.error("Home app not found. Cannot launch home screen.")
             return
