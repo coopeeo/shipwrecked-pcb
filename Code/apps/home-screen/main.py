@@ -30,7 +30,7 @@ class App(badge.BaseApp):
         badge.utils.set_led_pwm(10000)
 
     def loop(self) -> None:
-        if badge.input.get_button(badge.input.Buttons.SW12):
+        if badge.input.get_button(badge.input.Buttons.SW11):
             self.old_button_b = True
         else:
             if self.old_button_b:
