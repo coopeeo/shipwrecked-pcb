@@ -15,25 +15,23 @@ Button: TypeAlias = int
 class Buttons:
     """
     An enum of all the available buttons.
-    The buttons are numbered clockwise.
-    Example: DEG0 is the button in the right, DEG225 is the button in the bottom left.
     """
-    DEG0: Button = 3
-    DEG22_5: Button = 10
-    DEG45: Button = 4
-    DEG67_5: Button = 13
-    DEG90: Button = 5
-    DEG112_5: Button = 12
-    DEG135: Button = 6
-    DEG157_5: Button = 15
-    DEG180: Button = 7
-    DEG202_5: Button = 14
-    DEG225: Button = 0
-    DEG247_5: Button = 9
-    DEG270: Button = 1
-    DEG292_5: Button = 8
-    DEG315: Button = 2
-    DEG337_5: Button = 11
+    SW3: Button = 0
+    SW4: Button = 1
+    SW5: Button = 2
+    SW6: Button = 3
+    SW7: Button = 4
+    SW8: Button = 5
+    SW9: Button = 6
+    SW10: Button = 7
+    SW11: Button = 8
+    SW12: Button = 9
+    SW13: Button = 10
+    SW14: Button = 11
+    SW15: Button = 12
+    SW16: Button = 13
+    SW17: Button = 14
+    SW18: Button = 15
 
 
 

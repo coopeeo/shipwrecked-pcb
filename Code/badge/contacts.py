@@ -43,7 +43,7 @@ def add_contact(contact: Contact) -> None:
         # Add the contact
         internal_os.contacts.add_contact(contact.name, contact.pronouns, contact.badge_id, contact.handle)
     else:
-        raise PermissionError("You need the 'contacts:write' permission to add contacts.")
+        raise RuntimeError("You need the 'contacts:write' permission to add contacts.")
     
 def remove_contact_by_badge_id(badge_id: str) -> bool:
     """
@@ -53,7 +53,7 @@ def remove_contact_by_badge_id(badge_id: str) -> bool:
     if "contacts:write" in internal_os.apps.get_current_app_repr().permissions:
         return internal_os.contacts.remove_contact_by_badge_id(badge_id)
     else:
-        raise PermissionError("You need the 'contacts:write' permission to remove contacts.")
+        raise RuntimeError("You need the 'contacts:write' permission to remove contacts.")
 
 def remove_contact_by_name(name: str) -> bool:
     """
@@ -63,4 +63,4 @@ def remove_contact_by_name(name: str) -> bool:
     if "contacts:write" in internal_os.apps.get_current_app_repr().permissions:
         return internal_os.contacts.remove_contact_by_name(name)
     else:
-        raise PermissionError("You need the 'contacts:write' permission to remove contacts.")
+        raise RuntimeError("You need the 'contacts:write' permission to remove contacts.")

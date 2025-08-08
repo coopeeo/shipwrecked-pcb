@@ -28,9 +28,7 @@ class App(badge.BaseApp):
         badge.utils.set_led_pwm(10000)
 
     def loop(self) -> None:
-        # on the home screen, when a button is pressed, turn on the LED until the result is shown to indicate acknowledgement
-
-        if badge.input.get_button(8):
+        if badge.input.get_button(badge.input.Buttons.SW11):
             self.old_button = True
         else:
             if self.old_button:
@@ -42,7 +40,7 @@ class App(badge.BaseApp):
                 badge.utils.set_led(False)
             self.old_button = False
 
-        if badge.input.get_button(1):
+        if badge.input.get_button(badge.input.Buttons.SW4):
             self.old_button = True
         else:
             if self.old_button:
@@ -54,7 +52,7 @@ class App(badge.BaseApp):
                 badge.utils.set_led(False)
             self.old_button = False
 
-        if badge.input.get_button(9):
+        if badge.input.get_button(badge.input.Buttons.SW12):
             self.old_button = True
         else:
             if self.old_button:
@@ -69,8 +67,9 @@ class App(badge.BaseApp):
 
     def render_home_screen(self):
         """Render the home screen display."""
+        apps_to_show = filter(lambda app: app.app_path != "/apps/home-screen", internal_os.apps.registered_apps)
         badge.display.fill(1)
-        for i, app in enumerate(internal_os.apps.registered_apps):
+        for i, app in enumerate(apps_to_show):
             current_screen = self.cursor_pos // 6
             if i < current_screen * 6 or i >= (current_screen + 1) * 6:
                 continue
