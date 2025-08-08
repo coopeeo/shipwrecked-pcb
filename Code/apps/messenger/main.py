@@ -117,17 +117,22 @@ class App(badge.BaseApp):
         except Exception as e:
             self.logger.error(f"Failed to save last displayed timestamp: {e}")
 
-    def on_open(self) -> None:
+    def get_last_received_message(self) -> Message:
         try:
             with open(badge.utils.get_data_dir() + "/last_message.bin", "rb") as f:
                 data = f.read()
                 if data:
                     message = Message.from_bytes(data)
                     self.logger.info(f"Loaded last packet from file: {message}")
-                    if message.is_signature_valid():
-                        self.received_message = message
+                    return message
         except Exception as e:
             self.logger.error(f"Failed to load last packet from file: {e}")
+        return None
+    
+    def on_open(self) -> None:
+        message = self.get_last_received_message()
+        if message.is_signature_valid():
+            self.received_message = message
 
     def loop(self) -> None:
         # testing code, no longer needed
@@ -235,6 +240,16 @@ class App(badge.BaseApp):
         and that its signature is valid.
         """
         return message.creation_timestamp > self.get_last_displayed_message_timestamp() and message.is_signature_valid()
+    
+    def should_receive_message(self, message: Message) -> bool:
+        """
+        Confirm that the message is newer than the last one we received,
+        and that its signature is valid.
+        """
+        last_message = self.get_last_received_message()
+        if last_message is None:
+            return message.is_signature_valid()
+        return message.creation_timestamp > last_message.creation_timestamp and message.is_signature_valid()
 
     def on_packet(self, packet: badge.radio.Packet, is_foreground: bool) -> None:
         # NOTE to people looking at this for inspiration:
@@ -247,8 +262,8 @@ class App(badge.BaseApp):
         self.logger.info(f"Received message packet: {packet}")
         # verify it so we don't launch/update on a spoofed or old message
         message = Message.from_bytes(packet.data)
-        if not self.should_display_message(message):
-            self.logger.info(f"Not displaying message: {message}")
+        if not self.should_receive_message(message):
+            self.logger.info(f"Not receiving message: {message}")
             return
         # save the message
         self.save_message(packet.data)
