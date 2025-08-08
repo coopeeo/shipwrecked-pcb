@@ -14,7 +14,7 @@
     ```bash
     pip install -r requirements.txt
     ```
-3. Grab `signing_key.txt` from the Slack and put it in this folder.
+3. Grab `signing_key.txt` from the Slack (in #shipwrecked-pcb's pinned messages) and put it in this folder.
 4. Plug a badge into your computer.
 5. Run it:
     ```bash
