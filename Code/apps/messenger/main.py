@@ -7,6 +7,7 @@ import gc
 import os
 import utime
 import asyncio
+import time
 print(f"Free memory before import: {gc.mem_free()} bytes")
 gc.collect()  # Collect garbage to free up memory
 print(f"Free memory after collect: {gc.mem_free()} bytes")
@@ -123,7 +124,7 @@ class App(badge.BaseApp):
                 if data:
                     message = Message.from_bytes(data)
                     self.logger.info(f"Loaded last packet from file: {message}")
-                    if self.should_display_message(message):
+                    if message.is_signature_valid():
                         self.received_message = message
         except Exception as e:
             self.logger.error(f"Failed to load last packet from file: {e}")
@@ -147,11 +148,23 @@ class App(badge.BaseApp):
             # word wrapping the message to fit in the display
             max_chars_per_line = 200 // badge.display.nice_fonts[32].max_width
             wrapped_message = [self.received_message.message[i:i + max_chars_per_line] for i in range(0, len(self.received_message.message), max_chars_per_line)]
-            badge.display.nice_text('\n'.join(wrapped_message), 0, 40, 32)
+            parsed_time = time.localtime(self.received_message.creation_timestamp - (4 * 3600))  # Convert to local time (UTC-4)
+            badge.display.nice_text(f"At:{parsed_time[3]:02}:{parsed_time[4]:02}:{parsed_time[5]:02} {self.num_to_weekday(parsed_time[6])}", 0, 40, 24)
+            badge.display.nice_text('\n'.join(wrapped_message), 0, 70, 24)
             badge.display.show()
+            if self.should_display_message(self.received_message):
+                asyncio.create_task(self.notify())
             self.set_last_displayed_message_timestamp(self.received_message.creation_timestamp)
             self.received_message = None
-            asyncio.create_task(self.notify())
+
+    def num_to_weekday(self, num: int) -> str:
+        """
+        Convert a number to a weekday name.
+        :param num: Number representing the day of the week (0=Monday, 6=Sunday).
+        :return: Name of the weekday.
+        """
+        weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+        return weekdays[num % 7]
 
     def save_message(self, messageBytes: bytes) -> None:
         with open(badge.utils.get_data_dir() + "/last_message.bin", "wb") as f:

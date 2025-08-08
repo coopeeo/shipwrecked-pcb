@@ -20,7 +20,16 @@ class App(badge.BaseApp):
         self.cursor_pos = 0
         self.render_home_screen()
 
+    def beep(self) -> None:
+        """
+        Beep the buzzer + flash LED.
+        """
+        badge.buzzer.tone(1000, 0.025)
+        badge.utils.set_led_pwm(10000)
+
     def loop(self) -> None:
+        # on the home screen, when a button is pressed, turn on the LED until the result is shown to indicate acknowledgement
+
         if badge.input.get_button(8):
             self.old_button = True
         else:
@@ -28,7 +37,9 @@ class App(badge.BaseApp):
                 # just released
                 self.logger.info("Button 8 pressed")
                 self.cursor_pos = (self.cursor_pos - 1) % len(internal_os.apps.registered_apps)
+                self.beep()
                 self.render_home_screen()
+                badge.utils.set_led(False)
             self.old_button = False
 
         if badge.input.get_button(1):
@@ -38,7 +49,9 @@ class App(badge.BaseApp):
                 # just released
                 self.logger.info("Button 1 pressed")
                 self.cursor_pos = (self.cursor_pos + 1) % len(internal_os.apps.registered_apps)
+                self.beep()
                 self.render_home_screen()
+                badge.utils.set_led(False)
             self.old_button = False
 
         if badge.input.get_button(9):
@@ -48,7 +61,9 @@ class App(badge.BaseApp):
                 # just released
                 self.logger.info("Button 9 pressed")
                 self.logger.info(f"Launching app at position {self.cursor_pos}")
+                self.beep()
                 self.launch_app(internal_os.apps.registered_apps[self.cursor_pos])
+                badge.utils.set_led(False)
                 return # don't run the rest of the loop - return control to the OS
             self.old_button = False
 
