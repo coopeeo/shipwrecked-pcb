@@ -71,20 +71,22 @@ def send_announcement(msg):
 
 setup()
 
-confirm = input(f"Are you sure you want to send this announcement? (y/n): ")
+print("Your announcement:")
+print(full_msg)
+confirm = input(f"Are you sure you want to send it? (y/n): ")
 if not confirm.lower().startswith("y"):
     print("Aborting.")
     sys.exit(0)
 
-print(f"Sending announcement via {selected_port}...")
-for i in range(4):
-    print(f"Sending announcement, attempt {i+1}/5...")
-    try:
-        send_announcement(full_msg)
-    except Exception as e:
-        print(f"There was an error on this attempt. It's probably fine tho :p {e}")
-    time.sleep(3)
+# print(f"Sending announcement via {selected_port}...")
+# for i in range(4):
+#     print(f"Sending announcement, attempt {i+1}/5...")
+#     try:
+#         send_announcement(full_msg)
+#     except Exception as e:
+#         print(f"There was an error on this attempt. It's probably fine tho :p {e}")
+#     time.sleep(3)
 # last one
-print("Sending announcement, attempt 5/5...")
+print("Sending announcement...")
 send_announcement(full_msg)
 print("Announcement sent.")
