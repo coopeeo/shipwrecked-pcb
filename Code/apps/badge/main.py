@@ -20,7 +20,7 @@ class App(badge.BaseApp):
         font, name = self.decide_name_size(contact.name)
         name_height = font.height * (name.count('\n') + 1)
         badge.display.nice_text(name, 0, 0, font=font, color=0, rot=0, x_spacing=0, y_spacing=0)
-        badge.display.nice_text(f"{contact.pronouns}\n@{contact.handle}", 0, name_height, font=24, color=0, rot=0, x_spacing=0, y_spacing=0)
+        badge.display.nice_text(f"{contact.pronouns}\n@{contact.handle}", 0, name_height, font=32, color=0, rot=0, x_spacing=0, y_spacing=0)
         badge.display.nice_text(f"0x{contact.badge_id:0>4x}", 200-badge.display.nice_fonts[24].max_width*6, name_height, font=24, color=0, rot=0, x_spacing=0, y_spacing=0)
         badge.display.show()
     
