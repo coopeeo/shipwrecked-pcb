@@ -12,7 +12,9 @@ internal_os = InternalOS.instance()
 class App(badge.BaseApp):
     def __init__(self):
         self.cursor_pos = 0
-        self.old_button = False
+        self.old_button_f = False
+        self.old_button_b = False
+        self.old_button_l = False
         self.button_time = utime.ticks_ms()
 
     def on_open(self) -> None:
@@ -28,55 +30,58 @@ class App(badge.BaseApp):
         badge.utils.set_led_pwm(10000)
 
     def loop(self) -> None:
-        if badge.input.get_button(badge.input.Buttons.SW11):
-            self.old_button = True
+        if badge.input.get_button(badge.input.Buttons.SW12):
+            self.old_button_b = True
         else:
-            if self.old_button:
+            if self.old_button_b:
                 # just released
                 self.logger.info("Button 8 pressed")
-                self.cursor_pos = (self.cursor_pos - 1) % len(internal_os.apps.registered_apps)
+                self.cursor_pos = (self.cursor_pos - 1) % len(self.get_apps_to_show())
                 self.beep()
                 self.render_home_screen()
                 badge.utils.set_led(False)
-            self.old_button = False
-
-        if badge.input.get_button(badge.input.Buttons.SW4):
-            self.old_button = True
-        else:
-            if self.old_button:
-                # just released
-                self.logger.info("Button 1 pressed")
-                self.cursor_pos = (self.cursor_pos + 1) % len(internal_os.apps.registered_apps)
-                self.beep()
-                self.render_home_screen()
-                badge.utils.set_led(False)
-            self.old_button = False
+            self.old_button_b = False
 
         if badge.input.get_button(badge.input.Buttons.SW12):
-            self.old_button = True
+            self.old_button_f = True
         else:
-            if self.old_button:
+            if self.old_button_f:
+                # just released
+                self.logger.info("Button 1 pressed")
+                self.cursor_pos = (self.cursor_pos + 1) % len(self.get_apps_to_show())
+                self.beep()
+                self.render_home_screen()
+                badge.utils.set_led(False)
+            self.old_button_f = False
+
+        if badge.input.get_button(badge.input.Buttons.SW4):
+            self.old_button_l = True
+        else:
+            if self.old_button_l:
                 # just released
                 self.logger.info("Button 9 pressed")
                 self.logger.info(f"Launching app at position {self.cursor_pos}")
                 self.beep()
-                self.launch_app(internal_os.apps.registered_apps[self.cursor_pos])
+                self.launch_app(self.get_apps_to_show()[self.cursor_pos])
                 badge.utils.set_led(False)
                 return # don't run the rest of the loop - return control to the OS
-            self.old_button = False
+            self.old_button_l = False
 
     def render_home_screen(self):
         """Render the home screen display."""
-        apps_to_show = filter(lambda app: app.app_path != "/apps/home-screen", internal_os.apps.registered_apps)
         badge.display.fill(1)
-        for i, app in enumerate(apps_to_show):
+        for i, app in enumerate(self.get_apps_to_show()):
             current_screen = self.cursor_pos // 6
             if i < current_screen * 6 or i >= (current_screen + 1) * 6:
                 continue
             app_x = (i % 3) * 66
-            app_y = (i // 3) * 58 + 11
+            app_y = (i // 3) * 78 + 12
             self.draw_app_icon(app, app_x, app_y, self.cursor_pos == i)
+        self.logger.debug(f"Cursor position: {self.cursor_pos}, total apps: {len(self.get_apps_to_show())}")
         badge.display.show()
+
+    def get_apps_to_show(self):
+        return list(filter(lambda app: app.app_path != "/apps/home-screen", internal_os.apps.registered_apps))
 
     def draw_app_icon(self, app_repr, x, y, selected):
         fb = badge.display.import_pbm(app_repr.logo_path)
