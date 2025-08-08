@@ -1,6 +1,0 @@
-{
-    "displayName": "hello-world",
-    "logoPath": "does-not-exist.pbm",
-    "permissions": ["notifications:write", "rawHardware:write", "radio:write", "uart:write", "contacts:write"],
-    "appNumber": 1
-}
