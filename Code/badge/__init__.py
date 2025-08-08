@@ -9,3 +9,4 @@ import badge.notifs as notifs
 import badge.radio as radio
 import badge.time as time
 import badge.utils as utils
+import badge.uart as uart

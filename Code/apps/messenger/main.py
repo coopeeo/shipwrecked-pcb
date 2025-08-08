@@ -117,45 +117,62 @@ class App(badge.BaseApp):
         except Exception as e:
             self.logger.error(f"Failed to save last displayed timestamp: {e}")
 
-    def on_open(self) -> None:
+    def get_last_received_message(self) -> Message:
         try:
             with open(badge.utils.get_data_dir() + "/last_message.bin", "rb") as f:
                 data = f.read()
                 if data:
                     message = Message.from_bytes(data)
                     self.logger.info(f"Loaded last packet from file: {message}")
-                    if message.is_signature_valid():
-                        self.received_message = message
+                    return message
         except Exception as e:
             self.logger.error(f"Failed to load last packet from file: {e}")
+        return None
+    
+    def on_open(self) -> None:
+        message = self.get_last_received_message()
+        if message.is_signature_valid():
+            self.received_message = message
 
     def loop(self) -> None:
-        if badge.input.get_button(badge.input.Buttons.SW4):
-            # TEST: decoding a message
-            if not self.last_button:
-                message_raw = b'\x00\xe0Eh\xe0f\x9a\xa0\x97=\x01\xefyg\xc5x\xcaF\x9cX\xa8\x1e\xd4\xf1\xf7\xe4%\xb8\xed\xc4\xcaxI\xa1\xdf7~\x0e\xb6\x8f?\xce\x8f\x90\x9d`\xe2\xf4\xa8\xf6\x95>,\x9aGn\x0b:\xba\xc3\x06[%\xa4\xc5h\x93\xbc\xe3%Hello this is another test message :)\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
-                message = Message.from_bytes(message_raw)
-                self.logger.info(f"Message created: {message}")
-            self.last_button = True
-        else:
-            self.last_button = False
+        # testing code, no longer needed
+        # if badge.input.get_button(badge.input.Buttons.SW4):
+        #     # TEST: decoding a message
+        #     if not self.last_button:
+        #         message_raw = b"\x00~\xbev\x04\xd6\x9b\x1aT\x97\xa9\x16\xe5s\x87\x17[<\x9b>\xd7\x03\x95\xe5H7\xd4\xa9\x8cb\x13\xe8/7\x01\xc7ah~\xa6\xb8\x10\xdf\x85Q\xfd\xeb\xf3\xb3`\x16\xf6\xdb.\xa7\xb2KD.\xc8\xb67\xca\x8a\xcfh\x95\xf5@\xb3This is a super long message to test how the word wrapper works. I'm just going to keep typing until I get cut off. Is this too long yet? It's difficult to guess at how long 179 c"
+        #         self.on_packet(badge.radio.Packet(0xffff, 3, message_raw), True)
+        #     self.last_button = True
+        # else:
+        #     self.last_button = False
         
         if self.received_message:
-            # TODO: buzz buzzer + blink led on force open
             self.logger.info(f"Displaying message: {self.received_message}")
             badge.display.fill(1)
-            badge.display.nice_text("Announced:", 0, 0, 42)
             # word wrapping the message to fit in the display
-            max_chars_per_line = 200 // badge.display.nice_fonts[32].max_width
-            wrapped_message = [self.received_message.message[i:i + max_chars_per_line] for i in range(0, len(self.received_message.message), max_chars_per_line)]
+            font_size = 24
+            wrapped_message = self.wrap_message(self.received_message.message, font_size)
+            if len(wrapped_message) > (200-70)//font_size:
+                # if we can't make it work with size 24, try size 18
+                font_size = 18
+                wrapped_message = self.wrap_message(self.received_message.message, font_size)
             parsed_time = time.localtime(self.received_message.creation_timestamp - (4 * 3600))  # Convert to local time (UTC-4)
-            badge.display.nice_text(f"At:{parsed_time[3]:02}:{parsed_time[4]:02}:{parsed_time[5]:02} {self.num_to_weekday(parsed_time[6])}", 0, 40, 24)
-            badge.display.nice_text('\n'.join(wrapped_message), 0, 70, 24)
+            title_size = 42 if font_size == 24 else 32
+            badge.display.nice_text("Announced:", 0, 0, title_size)
+            badge.display.nice_text(f"At:{parsed_time[3]:02}:{parsed_time[4]:02}:{parsed_time[5]:02} {self.num_to_weekday(parsed_time[6])}", 0, title_size + 1, font_size)
+            badge.display.nice_text('\n'.join(wrapped_message), 0, title_size + 2 + font_size, font_size)
             badge.display.show()
             if self.should_display_message(self.received_message):
                 asyncio.create_task(self.notify())
             self.set_last_displayed_message_timestamp(self.received_message.creation_timestamp)
             self.received_message = None
+
+    def wrap_message(self, message: str, size: int) -> list[str]:
+        max_chars_per_line = 16 if size == 24 else 25
+        wrapped_message = [message[i:i + max_chars_per_line] for i in range(0, len(message), max_chars_per_line)]
+        result = []
+        for line in wrapped_message:
+            result += line.split('\n')  # Split by newlines if any
+        return result
 
     def num_to_weekday(self, num: int) -> str:
         """
@@ -169,36 +186,42 @@ class App(badge.BaseApp):
     def save_message(self, messageBytes: bytes) -> None:
         with open(badge.utils.get_data_dir() + "/last_message.bin", "wb") as f:
             f.write(messageBytes)
+        self.logger.info("Message saved to file")
 
-    def siren(self) -> None:
+    async def siren(self) -> None:
         """
         Siren the LED to indicate a new message.
+        This async function runs on the OS thread - make sure it yields properly.
         """
         for i in range(0, 65535, 5000):
             badge.utils.set_led_pwm(i)
-            utime.sleep(0.05)
+            await asyncio.sleep(0.05)
         badge.utils.set_led(True)
         for i in range(65535, 0, -5000):
             badge.utils.set_led_pwm(i)
-            utime.sleep(0.05)
+            await asyncio.sleep(0.05)
         badge.utils.set_led_pwm(0)
 
-    def ring(self) -> None:
+    async def ring(self) -> None:
         """
         Ring the buzzer to indicate a new message.
+        This async function runs on the OS thread - make sure it yields properly.
         """
         # siren the buzzer - for loop with audible tones
         badge.buzzer.tone(523, 0.5)  # C5
-        utime.sleep(0.1)
+        await asyncio.sleep(0.1)
         badge.buzzer.tone(392, 0.25)  # G4
-        utime.sleep(0.05)
+        await asyncio.sleep(0.05)
         badge.buzzer.tone(392, 0.25)  # G4
-        utime.sleep(0.05)
+        await asyncio.sleep(0.05)
         badge.buzzer.tone(415, 0.5)  # G#4
-        utime.sleep(0.7)
+        await asyncio.sleep(0.1)
+        badge.buzzer.tone(392, 0.5)  # G4
+        await asyncio.sleep(0.6)
         badge.buzzer.tone(493, 0.5)  # B4
-        utime.sleep(0.1)
+        await asyncio.sleep(0.1)
         badge.buzzer.tone(523, 0.5)  # C5
+        await asyncio.sleep(0.1)
         badge.buzzer.no_tone()
 
     async def notify(self) -> None:
@@ -207,9 +230,9 @@ class App(badge.BaseApp):
         """
 
         # is this the right way to do this?
-        self.siren()
-        self.ring()
-        self.siren()
+        await self.siren()
+        await self.ring()
+        await self.siren()
 
     def should_display_message(self, message: Message) -> bool:
         """
@@ -217,6 +240,16 @@ class App(badge.BaseApp):
         and that its signature is valid.
         """
         return message.creation_timestamp > self.get_last_displayed_message_timestamp() and message.is_signature_valid()
+    
+    def should_receive_message(self, message: Message) -> bool:
+        """
+        Confirm that the message is newer than the last one we received,
+        and that its signature is valid.
+        """
+        last_message = self.get_last_received_message()
+        if last_message is None:
+            return message.is_signature_valid()
+        return message.creation_timestamp > last_message.creation_timestamp and message.is_signature_valid()
 
     def on_packet(self, packet: badge.radio.Packet, is_foreground: bool) -> None:
         # NOTE to people looking at this for inspiration:
@@ -229,8 +262,8 @@ class App(badge.BaseApp):
         self.logger.info(f"Received message packet: {packet}")
         # verify it so we don't launch/update on a spoofed or old message
         message = Message.from_bytes(packet.data)
-        if not self.should_display_message(message):
-            self.logger.info(f"Not displaying message: {message}")
+        if not self.should_receive_message(message):
+            self.logger.info(f"Not receiving message: {message}")
             return
         # save the message
         self.save_message(packet.data)

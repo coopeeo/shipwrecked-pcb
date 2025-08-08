@@ -64,7 +64,14 @@ class MicroFont:
             index = self.index
         else:
             self.stream.seek(0)
-            index = self.stream.read(self.index_len)
+            try:
+                index = self.stream.read(self.index_len)
+            except OSError:
+                # this is OSerror 84 - no idea what causes it
+                # just return an empty char and move on
+                print(f"ERROR:MicroFont:OSError while trying to read index for char {ch}")
+                # the weird math below is to return the correct length of 0s that a char would have - divide width by 8, rounding up, and multiply that by height
+                return (b'\x00'*(self.height*(-(self.max_width//-8)))), self.height, self.max_width
             if self.cache_index: self.index = index
 
         # Get the character data offset inside the file

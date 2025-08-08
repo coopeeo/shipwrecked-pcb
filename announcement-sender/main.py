@@ -51,12 +51,14 @@ device = belay.Device(selected_port)
 def setup():
     print("Shipwrecked PCB Badge OS starting...")
     from internal_os import internalos
+    import time
     import asyncio
     badge = internalos.InternalOS.instance()
     badge.setup()
 
 @device.task
 def send_announcement(msg):
+    
     # async def send_thing():
     #     print("waiting to send...")
     #     await asyncio.sleep(10)
@@ -67,24 +69,29 @@ def send_announcement(msg):
     #     await badge.apps.launch_app(badge.apps.get_app_by_path("/apps/messenger"))
     # asyncio.create_task(send_thing())
     # badge.run_forever()
-    badge.radio._send_msg(b'\xff\xff', b'\x00\x03', msg)
+    for i in range(3):
+        print(f"Sending announcement, attempt {i+1}/3...")
+        badge.radio._send_msg(b'\xff\xff', b'\x00\x03', msg)
+        time.sleep(10)
 
 setup()
 
-confirm = input(f"Are you sure you want to send this announcement? (y/n): ")
+print("Your announcement:")
+print(full_msg)
+confirm = input(f"Are you sure you want to send it? (y/n): ")
 if not confirm.lower().startswith("y"):
     print("Aborting.")
     sys.exit(0)
 
-print(f"Sending announcement via {selected_port}...")
-for i in range(4):
-    print(f"Sending announcement, attempt {i+1}/5...")
-    try:
-        send_announcement(full_msg)
-    except Exception as e:
-        print(f"There was an error on this attempt. It's probably fine tho :p {e}")
-    time.sleep(3)
+# print(f"Sending announcement via {selected_port}...")
+# for i in range(4):
+#     print(f"Sending announcement, attempt {i+1}/5...")
+#     try:
+#         send_announcement(full_msg)
+#     except Exception as e:
+#         print(f"There was an error on this attempt. It's probably fine tho :p {e}")
+#     time.sleep(3)
 # last one
-print("Sending announcement, attempt 5/5...")
+print("Sending announcement...")
 send_announcement(full_msg)
 print("Announcement sent.")
