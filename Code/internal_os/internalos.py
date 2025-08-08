@@ -4,6 +4,7 @@ import gc
 
 from machine import RTC, Pin, PWM, unique_id
 
+from internal_os.hardware.uart import BadgeUART
 from internal_os.hardware.display import BadgeDisplay
 from internal_os.hardware.buttons import BadgeButtons
 from internal_os.hardware.radio import BadgeRadio
@@ -60,6 +61,7 @@ class InternalOS:
         self.rtc = RTC()
         self.buzzer = PWM(Pin(28, Pin.OUT))
         self.utils = BadgeUtils()
+        self.uart = BadgeUART()
 
         # software
         gc.enable()
