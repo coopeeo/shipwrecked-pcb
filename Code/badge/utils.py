@@ -31,3 +31,21 @@ def get_data_dir() -> str:
                 pass
 
     return result
+
+def set_led(value: bool) -> None:
+    """
+    Set the LED state.
+    :param value: True to turn on the LED, False to turn it off.
+    """
+    
+    if value:
+        internal_os.utils.set_led(True)
+    else:
+        internal_os.utils.set_led(False)
+
+def set_led_pwm(value: int) -> None:
+    """
+    Set the LED state.
+    :param value: Control the brightness of the LED (0-65535).
+    """
+    internal_os.utils.set_led_pwm(value)

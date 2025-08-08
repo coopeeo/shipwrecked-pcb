@@ -1,8 +1,6 @@
 {
     "displayName": "home-screen",
     "logoPath": "home-icon.pbm",
-    "fullScreen": "false",
-    "suppressNotifs": "false",
     "permissions": [],
     "appNumber": 0
 }

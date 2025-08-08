@@ -5,6 +5,9 @@ import struct
 import logging
 import gc
 import os
+import utime
+import asyncio
+import time
 print(f"Free memory before import: {gc.mem_free()} bytes")
 gc.collect()  # Collect garbage to free up memory
 print(f"Free memory after collect: {gc.mem_free()} bytes")
@@ -13,7 +16,7 @@ print(f"Free memory after imports: {gc.mem_free()} bytes")
 gc.collect()  # Collect garbage again after imports
 print(f"Free memory after second collect: {gc.mem_free()} bytes")
 
-with open(badge.util.get_data_dir() + "/announcement_key.txt", "r") as f:
+with open(badge.utils.get_data_dir() + "/announcement_key.txt", "r") as f:
     announcement_key_raw = f.read()
     vk = PublicKey.fromCompressed(announcement_key_raw)
 
@@ -100,7 +103,7 @@ class App(badge.BaseApp):
 
     def get_last_displayed_message_timestamp(self) -> int:
         try:
-            with open(badge.util.get_data_dir() + "/last_displayed_timestamp.txt", "r") as f:
+            with open(badge.utils.get_data_dir() + "/last_displayed_timestamp.txt", "r") as f:
                 timestamp = int(f.read())
                 return timestamp
         except Exception as e:
@@ -109,25 +112,25 @@ class App(badge.BaseApp):
     
     def set_last_displayed_message_timestamp(self, timestamp: int) -> None:
         try:
-            with open(badge.util.get_data_dir() + "/last_displayed_timestamp.txt", "w") as f:
+            with open(badge.utils.get_data_dir() + "/last_displayed_timestamp.txt", "w") as f:
                 f.write(str(timestamp))
         except Exception as e:
             self.logger.error(f"Failed to save last displayed timestamp: {e}")
 
     def on_open(self) -> None:
         try:
-            with open(badge.util.get_data_dir() + "/last_message.bin", "rb") as f:
+            with open(badge.utils.get_data_dir() + "/last_message.bin", "rb") as f:
                 data = f.read()
                 if data:
                     message = Message.from_bytes(data)
                     self.logger.info(f"Loaded last packet from file: {message}")
-                    if self.should_display_message(message):
+                    if message.is_signature_valid():
                         self.received_message = message
         except Exception as e:
             self.logger.error(f"Failed to load last packet from file: {e}")
 
     def loop(self) -> None:
-        if badge.input.get_button(1):
+        if badge.input.get_button(badge.input.Buttons.SW4):
             # TEST: decoding a message
             if not self.last_button:
                 message_raw = b'\x00\xe0Eh\xe0f\x9a\xa0\x97=\x01\xefyg\xc5x\xcaF\x9cX\xa8\x1e\xd4\xf1\xf7\xe4%\xb8\xed\xc4\xcaxI\xa1\xdf7~\x0e\xb6\x8f?\xce\x8f\x90\x9d`\xe2\xf4\xa8\xf6\x95>,\x9aGn\x0b:\xba\xc3\x06[%\xa4\xc5h\x93\xbc\xe3%Hello this is another test message :)\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
@@ -138,20 +141,75 @@ class App(badge.BaseApp):
             self.last_button = False
         
         if self.received_message:
+            # TODO: buzz buzzer + blink led on force open
             self.logger.info(f"Displaying message: {self.received_message}")
             badge.display.fill(1)
             badge.display.nice_text("Announced:", 0, 0, 42)
             # word wrapping the message to fit in the display
             max_chars_per_line = 200 // badge.display.nice_fonts[32].max_width
             wrapped_message = [self.received_message.message[i:i + max_chars_per_line] for i in range(0, len(self.received_message.message), max_chars_per_line)]
-            badge.display.nice_text('\n'.join(wrapped_message), 0, 40, 32)
+            parsed_time = time.localtime(self.received_message.creation_timestamp - (4 * 3600))  # Convert to local time (UTC-4)
+            badge.display.nice_text(f"At:{parsed_time[3]:02}:{parsed_time[4]:02}:{parsed_time[5]:02} {self.num_to_weekday(parsed_time[6])}", 0, 40, 24)
+            badge.display.nice_text('\n'.join(wrapped_message), 0, 70, 24)
             badge.display.show()
+            if self.should_display_message(self.received_message):
+                asyncio.create_task(self.notify())
             self.set_last_displayed_message_timestamp(self.received_message.creation_timestamp)
             self.received_message = None
 
+    def num_to_weekday(self, num: int) -> str:
+        """
+        Convert a number to a weekday name.
+        :param num: Number representing the day of the week (0=Monday, 6=Sunday).
+        :return: Name of the weekday.
+        """
+        weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+        return weekdays[num % 7]
+
     def save_message(self, messageBytes: bytes) -> None:
-        with open(badge.util.get_data_dir() + "/last_message.bin", "wb") as f:
+        with open(badge.utils.get_data_dir() + "/last_message.bin", "wb") as f:
             f.write(messageBytes)
+
+    def siren(self) -> None:
+        """
+        Siren the LED to indicate a new message.
+        """
+        for i in range(0, 65535, 5000):
+            badge.utils.set_led_pwm(i)
+            utime.sleep(0.05)
+        badge.utils.set_led(True)
+        for i in range(65535, 0, -5000):
+            badge.utils.set_led_pwm(i)
+            utime.sleep(0.05)
+        badge.utils.set_led_pwm(0)
+
+    def ring(self) -> None:
+        """
+        Ring the buzzer to indicate a new message.
+        """
+        # siren the buzzer - for loop with audible tones
+        badge.buzzer.tone(523, 0.5)  # C5
+        utime.sleep(0.1)
+        badge.buzzer.tone(392, 0.25)  # G4
+        utime.sleep(0.05)
+        badge.buzzer.tone(392, 0.25)  # G4
+        utime.sleep(0.05)
+        badge.buzzer.tone(415, 0.5)  # G#4
+        utime.sleep(0.7)
+        badge.buzzer.tone(493, 0.5)  # B4
+        utime.sleep(0.1)
+        badge.buzzer.tone(523, 0.5)  # C5
+        badge.buzzer.no_tone()
+
+    async def notify(self) -> None:
+        """
+        Asynchronously notify the user of a new message.
+        """
+
+        # is this the right way to do this?
+        self.siren()
+        self.ring()
+        self.siren()
 
     def should_display_message(self, message: Message) -> bool:
         """
@@ -162,14 +220,14 @@ class App(badge.BaseApp):
 
     def on_packet(self, packet: badge.radio.Packet, is_foreground: bool) -> None:
         # NOTE to people looking at this for inspiration:
-        # Ite is very bad behavoir for most apps to forcibly
+        # It is very bad behavior for most apps to forcibly
         # launch themselves from the background like this.
         # The announcements app is an exception because receiving
         # announcements is quite literally the primary function
         # of the Shipwrecked badge.
         # Again, your apps RFC2119-SHOULD-NOT do this.
         self.logger.info(f"Received message packet: {packet}")
-        # verify it so we don't launch/updat on a spoofed or old message
+        # verify it so we don't launch/update on a spoofed or old message
         message = Message.from_bytes(packet.data)
         if not self.should_display_message(message):
             self.logger.info(f"Not displaying message: {message}")

@@ -1,8 +1,8 @@
 {
   "name": "webflasher",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
-  "homepage": "https://mpkendall.github.io/shipwrecked-pcb",
+  "homepage": "https://badge.shipwrecked.hackclub.com",
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.6.4",

@@ -8,4 +8,4 @@ import badge.input as input
 import badge.notifs as notifs
 import badge.radio as radio
 import badge.time as time
-import badge.util as util
+import badge.utils as utils

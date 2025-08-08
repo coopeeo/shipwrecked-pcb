@@ -43,16 +43,20 @@ export default function AppManager({ apps, onAppListChange }: AppManagerProps) {
             const appFolders = appsFolder.childNodes;
 
             for (const appFolder of appFolders) {
+                console.log(`Found app folder: ${appFolder.path}`);
                 const manifestPath = `${appFolder.path}/manifest.json`;
                 if (appFolder.childNodes.find((f: any) => f.path === manifestPath)) {
                     try {
                         const manifestContent = await mp.downloadFileToString(manifestPath);
+                        console.log(`Loaded manifest for ${appFolder.path}:`, manifestContent);
                         const manifest = JSON.parse(manifestContent);
-                        if (manifest.displayName && manifest.logoPath && typeof manifest.appNumber === 'number') {
+                        if (manifest.displayName && typeof manifest.appNumber === 'number') {
                             newApps.push({
                                 manifest,
                                 path: appFolder.path
                             });
+                        } else {
+                            console.warn(`Invalid manifest for ${appFolder.path}:`, manifest);
                         }
                     } catch (error) {
                         console.error(`Failed to load manifest for ${appFolder.path}:`, error);
@@ -98,8 +102,8 @@ export default function AppManager({ apps, onAppListChange }: AppManagerProps) {
             // Parse and validate manifest
             const manifestContent = await manifestFile.async('text');
             const manifest = JSON.parse(manifestContent);
-            if (!manifest.displayName || !manifest.logoPath || typeof manifest.appNumber !== 'number') {
-                setStatus("Error: Invalid manifest.json (missing required fields: displayName, logoPath, or appNumber)");
+            if (!manifest.displayName || typeof manifest.appNumber !== 'number') {
+                setStatus("Error: Invalid manifest.json (missing required fields: displayName or appNumber, and appNumber must be an integer)");
                 return;
             }
 
