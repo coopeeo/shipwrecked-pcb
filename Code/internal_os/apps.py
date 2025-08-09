@@ -323,7 +323,9 @@ class AppManager:
         while True:
             await asyncio.sleep(0.1)
             if self.buttons.is_pressed(0) and self.fg_app_running:  # Assuming button 0 is the home button
-                self.logger.info("Home button pressed. Stopping current app and launching home-screen.")
+                self.logger.info("Home button pressed. Running before close function, then stopping current app and launching home-screen.")
+                if self.fg_app_running and self.selected_app_instance:
+                    self.selected_app_instance.before_close()
                 home_app = self.get_app_by_path('/apps/home-screen')
                 if not home_app:
                     self.logger.error("Home app not found. Cannot return to home screen.")

@@ -1,6 +1,10 @@
 import badge
 
 class App(badge.BaseApp):
+    def __init__(self):
+        self.light_status = False
+        self.button_light = False
+
     def on_open(self) -> None:
         me = badge.contacts.my_contact()
         if not me:
@@ -10,7 +14,20 @@ class App(badge.BaseApp):
             return
         self.logger.info(f"Rendering contact info for {me}")
         self.render_display(me)
-    
+
+    def loop(self) -> None:
+        if badge.input.get_button(badge.input.Buttons.SW15):
+            self.button_light = True
+        else:
+            if self.button_light:
+                if self.light_status:
+                    badge.utils.set_led(False)
+                    self.light_status = False
+                else:
+                    badge.utils.set_led_pwm(65535)
+                    self.light_status = True
+            self.button_light = False
+
     def render_display(self, contact) -> None:
         badge.display.fill(1)  # Clear the display
         
@@ -77,7 +94,7 @@ class App(badge.BaseApp):
             font = badge.display.nice_fonts[18]
             name = '-\n'.join([name[i:i + 10] for i in range(0, len(name), 10)][:7])
         return font, name
-
-
-    def loop(self) -> None:
-        pass
+    
+    def before_close(self) -> None:
+        self.light_status = False
+        badge.utils.set_led(False)

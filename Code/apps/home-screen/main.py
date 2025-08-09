@@ -30,24 +30,24 @@ class App(badge.BaseApp):
         badge.utils.set_led_pwm(10000)
 
     def loop(self) -> None:
-        if badge.input.get_button(badge.input.Buttons.SW11):
+        if badge.input.get_button(badge.input.Buttons.SW12):
             self.old_button_b = True
         else:
             if self.old_button_b:
                 # just released
-                self.logger.info("Button 8 pressed")
+                self.logger.info("Button 1 pressed")
                 self.cursor_pos = (self.cursor_pos - 1) % len(self.get_apps_to_show())
                 self.beep()
                 self.render_home_screen()
                 badge.utils.set_led(False)
             self.old_button_b = False
 
-        if badge.input.get_button(badge.input.Buttons.SW12):
+        if badge.input.get_button(badge.input.Buttons.SW11):
             self.old_button_f = True
         else:
             if self.old_button_f:
                 # just released
-                self.logger.info("Button 1 pressed")
+                self.logger.info("Button 8 pressed")
                 self.cursor_pos = (self.cursor_pos + 1) % len(self.get_apps_to_show())
                 self.beep()
                 self.render_home_screen()
